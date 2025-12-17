@@ -1,87 +1,103 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ================= CONFIGURATION =================
-    // CHANGE THESE NUMBERS when you add new files!
-    const numberOfEventPhotos = 5;  // Do you have event-photo-5.jpg? Set this to 5.
-    const numberOfDirectors = 3;    // Do you have director-3.jpg? Set this to 3.
+    // UPDATE THESE NUMBERS AS YOU ADD PHOTOS
+    const config = {
+        mainEvents: 5,      // event-photo-1.jpg ...
+        directors: 3,       // director-1.jpg ...
+        houstonHub: 5,      // houston-hub-event-1.jpg ...
+        austinHub: 5        // austin-hub-event-1.jpg ...
+    };
     // =================================================
 
+    // Helper function to create image grids/sliders
+    function loadImages(containerId, count, prefix, isSlider = false) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
 
-    // --- 1. HANDLE EVENT SLIDER ---
-    const sliderTrack = document.getElementById('event-slider');
-    
-    if (sliderTrack) {
-        // Generate images automatically based on the number above
-        for (let i = 1; i <= numberOfEventPhotos; i++) {
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            
+        for (let i = 1; i <= count; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = isSlider ? 'slide' : 'grid-item';
+
             const img = document.createElement('img');
-            img.src = `images/event-photo-${i}.jpg`; // Looks for event-photo-1.jpg, etc.
-            img.alt = `Event Photo ${i}`;
+            img.src = `images/${prefix}-${i}.jpg`; 
+            img.alt = `${prefix.replace(/-/g, ' ')} ${i}`;
             
-            // Error handling: if image doesn't exist, hide it
-            img.onerror = function() { this.parentElement.style.display = 'none'; };
+            // Hide image if file not found
+            img.onerror = function() { 
+                if(isSlider) this.parentElement.style.display = 'none'; 
+                else this.style.display = 'none';
+            };
 
-            slide.appendChild(img);
-            sliderTrack.appendChild(slide);
+            wrapper.appendChild(img);
+            
+            // For Directors, we might add a name label
+            if (prefix === 'director') {
+                const name = document.createElement('h3');
+                name.textContent = `Director ${i}`;
+                wrapper.appendChild(name);
+                wrapper.className = 'director-card'; // Special class for directors
+            }
+
+            container.appendChild(wrapper);
         }
+    }
 
-        // Slider Functionality
+    // Load Main Events (Slider)
+    loadImages('event-slider', config.mainEvents, 'event-photo', true);
+    
+    // Load Directors (Grid)
+    loadImages('directors-grid', config.directors, 'director');
+
+    // Load Houston Hub (Grid or Slider - using Slider logic for consistency)
+    loadImages('houston-slider', config.houstonHub, 'houston-hub-event', true);
+
+    // Load Austin Hub (Slider)
+    loadImages('austin-slider', config.austinHub, 'austin-hub-event', true);
+
+
+    // --- SLIDER FUNCTIONALITY (Universal) ---
+    const sliders = document.querySelectorAll('.slider-container');
+    
+    sliders.forEach(slider => {
+        const track = slider.querySelector('.slider-track');
+        const nextBtn = slider.querySelector('.next-btn');
+        const prevBtn = slider.querySelector('.prev-btn');
+        
+        if(!track) return;
+
         let currentIndex = 0;
-        const slides = document.getElementsByClassName('slide');
-        const nextBtn = document.querySelector('.next-btn');
-        const prevBtn = document.querySelector('.prev-btn');
-
-        function updateSlider() {
-            // Move the track to show the current slide
-            // Note: This is a simple logic assuming 1 slide visible at a time
-            // For responsive multi-slide, we use percentages
+        
+        function updateSlide() {
+            // Check actual number of visible slides
+            const visibleSlides = track.children.length;
+            if (visibleSlides === 0) return;
             const percentage = -(currentIndex * 100); 
-            sliderTrack.style.transform = `translateX(${percentage}%)`;
+            track.style.transform = `translateX(${percentage}%)`;
         }
 
-        if(nextBtn && prevBtn) {
+        if(nextBtn) {
             nextBtn.addEventListener('click', () => {
-                // If we are at the end, loop back to start
-                currentIndex = (currentIndex + 1) % slides.length;
-                updateSlider();
+                const total = track.children.length;
+                currentIndex = (currentIndex + 1) % total;
+                updateSlide();
             });
+        }
 
+        if(prevBtn) {
             prevBtn.addEventListener('click', () => {
-                // If we are at start, loop to end
-                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-                updateSlider();
+                const total = track.children.length;
+                currentIndex = (currentIndex - 1 + total) % total;
+                updateSlide();
             });
         }
         
-        // Auto-scroll every 5 seconds
+        // Auto scroll
         setInterval(() => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            updateSlider();
+            if(track.children.length > 0) {
+                currentIndex = (currentIndex + 1) % track.children.length;
+                updateSlide();
+            }
         }, 5000);
-    }
-
-
-    // --- 2. HANDLE DIRECTORS GRID ---
-    const directorsGrid = document.getElementById('directors-grid');
-
-    if (directorsGrid) {
-        for (let i = 1; i <= numberOfDirectors; i++) {
-            const card = document.createElement('div');
-            card.className = 'director-card';
-
-            const img = document.createElement('img');
-            img.src = `images/director-${i}.jpg`; // Looks for director-1.jpg
-            img.alt = `Director ${i}`;
-            img.onerror = function() { this.style.display = 'none'; };
-
-            const name = document.createElement('h3');
-            name.textContent = `Director ${i}`; // You can't guess names from files, so default placeholder
-
-            card.appendChild(img);
-            card.appendChild(name);
-            directorsGrid.appendChild(card);
-        }
-    }
+    });
 });
