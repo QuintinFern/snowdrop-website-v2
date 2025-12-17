@@ -26,7 +26,7 @@ ul { list-style: none; }
 .btn-nav { background: var(--primary-color); color: white !important; padding: 8px 15px; border-radius: 4px; }
 .btn-nav:hover { background: var(--primary-dark); }
 
-/* Hamburger Menu (Hidden on Desktop) */
+/* Hamburger Menu */
 .hamburger { display: none; cursor: pointer; }
 .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: var(--text-color); }
 
@@ -42,12 +42,24 @@ ul { list-style: none; }
 .btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
-/* Hero Sections */
+/* --- HERO SECTIONS --- */
+/* Home Page Hero */
 .hero-home { background: #ddd url('images/home-hero-bg.jpg') center/cover; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative;}
-.page-header { background: var(--primary-color); color: white; padding: 50px 0; text-align: center; }
+
+/* Standard Page Header (Updated to match Home Hero) */
+.page-header { 
+    /* This creates the blue overlay on top of the image */
+    background: linear-gradient(rgba(42, 128, 166, 0.7), rgba(42, 128, 166, 0.7)), url('images/home-hero-bg.jpg') center/cover;
+    color: white; 
+    padding: 80px 0; /* Increased padding for a larger "hero" feel */
+    text-align: center; 
+}
+
 .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; font-family: var(--font-heading); }
 .hero-overlay { background: rgba(42, 128, 166, 0.7); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;}
 .hero-content h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
+
+/* General Sections */
 .section { padding: 60px 0; }
 .section-title { text-align: center; color: var(--primary-color); margin-bottom: 40px; font-size: 2.5rem; font-family: var(--font-heading); }
 .section-subtitle { text-align: center; color: #666; margin-bottom: 30px; margin-top: -30px; }
@@ -61,7 +73,7 @@ ul { list-style: none; }
 .merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
 .merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
 
-/* General Layouts */
+/* Layouts */
 .content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
 .image-content img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -93,39 +105,18 @@ ul { list-style: none; }
 
 /* === MOBILE RESPONSIVENESS === */
 @media (max-width: 768px) {
-    /* Show Hamburger */
     .hamburger { display: block; z-index: 1001;}
-
-    /* Convert Menu to Slide-out */
     .nav-links {
-        position: fixed;
-        right: 0px;
-        top: 70px; /* Below navbar */
-        height: calc(100vh - 70px);
-        background-color: var(--white);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 60%;
-        transform: translateX(100%); /* Start hidden to the right */
-        transition: transform 0.4s ease-in-out;
-        box-shadow: -2px 5px 10px rgba(0,0,0,0.1);
-        padding-top: 50px;
+        position: fixed; right: 0px; top: 70px; height: calc(100vh - 70px);
+        background-color: var(--white); display: flex; flex-direction: column; align-items: center;
+        width: 60%; transform: translateX(100%); transition: transform 0.4s ease-in-out;
+        box-shadow: -2px 5px 10px rgba(0,0,0,0.1); padding-top: 50px;
     }
-
-    /* Class added by JS to show menu */
-    .nav-links.nav-active {
-        transform: translateX(0%);
-    }
-
-    .nav-links li { opacity: 0; } /* Fade in effect managed by JS */
-
-    /* Animate Hamburger into X */
+    .nav-links.nav-active { transform: translateX(0%); }
+    .nav-links li { opacity: 0; }
     .hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
     .hamburger.toggle .bar:nth-child(2) { opacity: 0; }
     .hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
-
-    /* Stack other elements */
     .content-wrapper, .merch-container { flex-direction: column; text-align: center;}
     .merch-image { max-width: 100%; margin-bottom: 20px; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
