@@ -8,7 +8,7 @@
     --font-body: 'Poppins', sans-serif;
 }
 
-body { font-family: var(--font-body); margin: 0; padding: 0; color: var(--text-color); line-height: 1.6; }
+body { font-family: var(--font-body); margin: 0; padding: 0; color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
 a { text-decoration: none; }
 ul { list-style: none; }
 
@@ -18,11 +18,17 @@ ul { list-style: none; }
 .nav-container { display: flex; justify-content: space-between; align-items: center; }
 .logo { display: flex; align-items: center; color: var(--primary-color); font-weight: bold; font-size: 1.2rem;}
 .logo img { height: 50px; margin-right: 10px; }
+
+/* Desktop Nav Links */
 .nav-links { display: flex; gap: 20px; }
 .nav-links a { color: var(--text-color); font-weight: 500; transition: color 0.3s;}
 .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
 .btn-nav { background: var(--primary-color); color: white !important; padding: 8px 15px; border-radius: 4px; }
 .btn-nav:hover { background: var(--primary-dark); }
+
+/* Hamburger Menu (Hidden on Desktop) */
+.hamburger { display: none; cursor: pointer; }
+.bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: var(--text-color); }
 
 /* Buttons */
 .btn-primary { background: var(--primary-color); color: white; padding: 10px 25px; border-radius: 5px; font-weight: 600; display: inline-block; margin-top: 15px; border: 1px solid white;}
@@ -33,6 +39,8 @@ ul { list-style: none; }
 .btn-email:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
 .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); padding: 8px 20px; border-radius: 4px; font-weight: 600; display: inline-block; }
 .btn-outline:hover { background: var(--primary-color); color: white; }
+.btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
+.btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
 /* Hero Sections */
 .hero-home { background: #ddd url('images/home-hero-bg.jpg') center/cover; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative;}
@@ -40,62 +48,28 @@ ul { list-style: none; }
 .page-header h1 { font-size: 2.5rem; margin-bottom: 10px; font-family: var(--font-heading); }
 .hero-overlay { background: rgba(42, 128, 166, 0.7); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;}
 .hero-content h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
-
-/* General Sections */
 .section { padding: 60px 0; }
 .section-title { text-align: center; color: var(--primary-color); margin-bottom: 40px; font-size: 2.5rem; font-family: var(--font-heading); }
 .section-subtitle { text-align: center; color: #666; margin-bottom: 30px; margin-top: -30px; }
 
-/* Content Wrapper */
-.content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-.text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
-.image-content img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
-/* --- MERCH SECTION STYLES (Fixed Layout) --- */
+/* Merch Section */
 .merch-section { background-color: #e9f5fa; }
-.merch-container { 
-    max-width: 1000px; 
-    margin: 0 auto; 
-    display: flex;         /* This forces side-by-side */
-    flex-direction: row;   /* Explicitly sets row direction */
-    align-items: center; 
-    gap: 50px; 
-}
-.merch-image { 
-    flex: 1; 
-    max-width: 50%; /* Prevents image from getting too wide */
-}
-.merch-image img { 
-    width: 100%; 
-    border-radius: 10px; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-    border: 4px solid white;
-}
+.merch-container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: row; align-items: center; gap: 50px; }
+.merch-image { flex: 1; max-width: 50%; }
+.merch-image img { width: 100%; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid white; }
 .merch-text { flex: 1; }
 .merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
 .merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
-.merch-text p { font-size: 1.1rem; margin-bottom: 30px; line-height: 1.8; }
-.btn-shop { 
-    background: #2a80a6; 
-    color: white; 
-    padding: 15px 40px; 
-    font-size: 1.2rem; 
-    border-radius: 50px; 
-    font-weight: bold; 
-    box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); 
-    transition: transform 0.2s; 
-    display: inline-block;
-}
-.btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
-/* Hub Cards */
+/* General Layouts */
+.content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+.text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
+.image-content img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
 .hub-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; border: 1px solid #eee; }
 .hub-card:hover { transform: translateY(-5px); }
 .hub-card-body { padding: 30px; }
 .hub-card h3 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 15px; }
-
-/* Sliders */
 .slider-container { position: relative; max-width: 800px; margin: 0 auto; overflow: hidden; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 .slider-track { display: flex; transition: transform 0.5s ease-in-out; width: 100%; }
 .slide { min-width: 100%; }
@@ -103,34 +77,57 @@ ul { list-style: none; }
 .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 24px; z-index: 10; }
 .prev-btn { left: 10px; }
 .next-btn { right: 10px; }
-
-/* Directors Grid */
 .directors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
 .director-card { text-align: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
 .director-card img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--primary-color); }
-
-/* Footer */
 .footer { background: var(--primary-color); color: white; padding: 40px 0 20px; margin-top: 50px; }
 .footer-content { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 20px;}
 .footer-info h3 { margin-bottom: 10px; }
 .ein-text { margin-top: 15px; font-size: 0.9rem; opacity: 0.9; background: rgba(0,0,0,0.1); padding: 5px 10px; border-radius: 4px; display: inline-block; }
 .footer-links { display: flex; gap: 15px; flex-wrap: wrap; }
 .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; font-size: 0.9rem; width: 100%; }
-
-/* Social Icons (UPDATED) */
 .social-icons { margin-top: 15px; display: flex; gap: 15px; }
 .social-icon { color: white; transition: opacity 0.3s; display: inline-block;}
-/* SIZE UPDATE: 48px is approx 0.5 inch */
 .social-icon img { width: 48px; height: 48px; filter: invert(1); } 
 .social-icon:hover { opacity: 0.8; }
 
-/* Mobile Response */
+/* === MOBILE RESPONSIVENESS === */
 @media (max-width: 768px) {
-    /* Merch section stacks vertically on phones */
+    /* Show Hamburger */
+    .hamburger { display: block; z-index: 1001;}
+
+    /* Convert Menu to Slide-out */
+    .nav-links {
+        position: fixed;
+        right: 0px;
+        top: 70px; /* Below navbar */
+        height: calc(100vh - 70px);
+        background-color: var(--white);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 60%;
+        transform: translateX(100%); /* Start hidden to the right */
+        transition: transform 0.4s ease-in-out;
+        box-shadow: -2px 5px 10px rgba(0,0,0,0.1);
+        padding-top: 50px;
+    }
+
+    /* Class added by JS to show menu */
+    .nav-links.nav-active {
+        transform: translateX(0%);
+    }
+
+    .nav-links li { opacity: 0; } /* Fade in effect managed by JS */
+
+    /* Animate Hamburger into X */
+    .hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+    .hamburger.toggle .bar:nth-child(2) { opacity: 0; }
+    .hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+    /* Stack other elements */
     .content-wrapper, .merch-container { flex-direction: column; text-align: center;}
     .merch-image { max-width: 100%; margin-bottom: 20px; }
-    
-    .nav-links { display: none; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
 }

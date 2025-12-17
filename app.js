@@ -1,16 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ================= CONFIGURATION =================
-    // UPDATE THESE NUMBERS AS YOU ADD PHOTOS
-    const config = {
-        mainEvents: 5,      // event-photo-1.jpg ...
-        directors: 3,       // director-1.jpg ...
-        houstonHub: 5,      // houston-hub-event-1.jpg ...
-        austinHub: 5        // austin-hub-event-1.jpg ...
-    };
-    // =================================================
+    // --- MOBILE MENU LOGIC ---
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const links = document.querySelectorAll('.nav-links li');
 
-    // Helper function to create image grids/sliders
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            // Toggle Nav
+            navLinks.classList.toggle('nav-active');
+            
+            // Hamburger Animation
+            hamburger.classList.toggle('toggle');
+
+            // Animate Links Fade In
+            links.forEach((link, index) => {
+                if (link.style.animation) {
+                    link.style.animation = '';
+                } else {
+                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+                }
+            });
+        });
+    }
+
+    // ================= IMAGE COUNTERS =================
+    const config = {
+        mainEvents: 5,      
+        directors: 3,       
+        houstonHub: 5,      
+        austinHub: 5        
+    };
+
     function loadImages(containerId, count, prefix, isSlider = false) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -23,40 +44,29 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = `images/${prefix}-${i}.jpg`; 
             img.alt = `${prefix.replace(/-/g, ' ')} ${i}`;
             
-            // Hide image if file not found
             img.onerror = function() { 
                 if(isSlider) this.parentElement.style.display = 'none'; 
                 else this.style.display = 'none';
             };
 
             wrapper.appendChild(img);
-            
-            // For Directors, we might add a name label
             if (prefix === 'director') {
                 const name = document.createElement('h3');
                 name.textContent = `Director ${i}`;
                 wrapper.appendChild(name);
-                wrapper.className = 'director-card'; // Special class for directors
+                wrapper.className = 'director-card';
             }
-
             container.appendChild(wrapper);
         }
     }
 
-    // Load Main Events (Slider)
     loadImages('event-slider', config.mainEvents, 'event-photo', true);
-    
-    // Load Directors (Grid)
     loadImages('directors-grid', config.directors, 'director');
-
-    // Load Houston Hub (Grid or Slider - using Slider logic for consistency)
     loadImages('houston-slider', config.houstonHub, 'houston-hub-event', true);
-
-    // Load Austin Hub (Slider)
     loadImages('austin-slider', config.austinHub, 'austin-hub-event', true);
 
 
-    // --- SLIDER FUNCTIONALITY (Universal) ---
+    // --- SLIDER LOGIC ---
     const sliders = document.querySelectorAll('.slider-container');
     
     sliders.forEach(slider => {
@@ -69,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentIndex = 0;
         
         function updateSlide() {
-            // Check actual number of visible slides
             const visibleSlides = track.children.length;
             if (visibleSlides === 0) return;
             const percentage = -(currentIndex * 100); 
@@ -92,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // Auto scroll
         setInterval(() => {
             if(track.children.length > 0) {
                 currentIndex = (currentIndex + 1) % track.children.length;
@@ -101,3 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000);
     });
 });
+
+// CSS Animation for Links (Injecting style here for simplicity)
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+@keyframes navLinkFade {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+`;
+document.head.appendChild(styleSheet);
