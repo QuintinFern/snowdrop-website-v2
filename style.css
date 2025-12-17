@@ -51,12 +51,37 @@ ul { list-style: none; }
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
 .image-content img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-/* --- MERCH SECTION STYLES --- */
-.merch-section { background-color: #e9f5fa; text-align: center; } /* Light blue background */
-.merch-container { max-width: 800px; margin: 0 auto; }
-.merch-text h3 { font-size: 2rem; color: var(--primary-color); margin-bottom: 15px; font-family: var(--font-heading); }
-.merch-text p { font-size: 1.1rem; margin-bottom: 30px; max-width: 700px; margin-left: auto; margin-right: auto; }
-.btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
+/* --- MERCH SECTION STYLES (UPDATED) --- */
+.merch-section { background-color: #e9f5fa; }
+.merch-container { 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    display: flex; /* Creates side-by-side layout */
+    align-items: center; 
+    gap: 50px; 
+}
+.merch-image { flex: 1; }
+.merch-image img { 
+    width: 100%; 
+    border-radius: 10px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+    border: 4px solid white;
+}
+.merch-text { flex: 1; }
+.merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
+.merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
+.merch-text p { font-size: 1.1rem; margin-bottom: 30px; line-height: 1.8; }
+.btn-shop { 
+    background: #2a80a6; 
+    color: white; 
+    padding: 15px 40px; 
+    font-size: 1.2rem; 
+    border-radius: 50px; 
+    font-weight: bold; 
+    box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); 
+    transition: transform 0.2s; 
+    display: inline-block;
+}
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
 /* Hub Cards */
@@ -94,8 +119,9 @@ ul { list-style: none; }
 .social-icon img { width: 24px; height: 24px; filter: invert(1); } /* Inverts black icons to white */
 .social-icon:hover { opacity: 0.8; }
 
+/* Mobile Response */
 @media (max-width: 768px) {
-    .content-wrapper { grid-template-columns: 1fr; }
+    .content-wrapper, .merch-container { grid-template-columns: 1fr; flex-direction: column; text-align: center;}
     .nav-links { display: none; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
