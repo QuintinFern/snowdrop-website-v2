@@ -51,16 +51,20 @@ ul { list-style: none; }
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
 .image-content img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-/* --- MERCH SECTION STYLES --- */
+/* --- MERCH SECTION STYLES (Fixed Layout) --- */
 .merch-section { background-color: #e9f5fa; }
 .merch-container { 
     max-width: 1000px; 
     margin: 0 auto; 
-    display: flex; 
+    display: flex;         /* This forces side-by-side */
+    flex-direction: row;   /* Explicitly sets row direction */
     align-items: center; 
     gap: 50px; 
 }
-.merch-image { flex: 1; }
+.merch-image { 
+    flex: 1; 
+    max-width: 50%; /* Prevents image from getting too wide */
+}
 .merch-image img { 
     width: 100%; 
     border-radius: 10px; 
@@ -113,16 +117,19 @@ ul { list-style: none; }
 .footer-links { display: flex; gap: 15px; flex-wrap: wrap; }
 .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; font-size: 0.9rem; width: 100%; }
 
-/* Social Icons (UPDATED SIZE) */
-.social-icons { margin-top: 15px; display: flex; gap: 10px; }
+/* Social Icons (UPDATED) */
+.social-icons { margin-top: 15px; display: flex; gap: 15px; }
 .social-icon { color: white; transition: opacity 0.3s; display: inline-block;}
-/* SIZE CHANGED TO 16px */
-.social-icon img { width: 16px; height: 16px; filter: invert(1); } 
+/* SIZE UPDATE: 48px is approx 0.5 inch */
+.social-icon img { width: 48px; height: 48px; filter: invert(1); } 
 .social-icon:hover { opacity: 0.8; }
 
 /* Mobile Response */
 @media (max-width: 768px) {
-    .content-wrapper, .merch-container { grid-template-columns: 1fr; flex-direction: column; text-align: center;}
+    /* Merch section stacks vertically on phones */
+    .content-wrapper, .merch-container { flex-direction: column; text-align: center;}
+    .merch-image { max-width: 100%; margin-bottom: 20px; }
+    
     .nav-links { display: none; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
