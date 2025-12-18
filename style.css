@@ -10,7 +10,7 @@
 
 body { font-family: var(--font-body); margin: 0; padding: 0; color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
 a { text-decoration: none; }
-ul { list-style: none; }
+ul { list-style: none; padding: 0; margin: 0; }
 img { max-width: 100%; display: block; }
 
 /* --- NAVIGATION --- */
@@ -30,9 +30,12 @@ img { max-width: 100%; display: block; }
 /* Hamburger Menu */
 .hamburger { display: none; cursor: pointer; }
 .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: var(--text-color); }
+.hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+.hamburger.toggle .bar:nth-child(2) { opacity: 0; }
+.hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
 
 /* Buttons */
-.btn-primary { background: var(--primary-color); color: white; padding: 10px 25px; border-radius: 5px; font-weight: 600; display: inline-block; margin-top: 15px; border: 1px solid white;}
+.btn-primary { background: var(--primary-color); color: white; padding: 10px 25px; border-radius: 5px; font-weight: 600; display: inline-block; margin-top: 15px; border: 1px solid white; cursor: pointer;}
 .btn-primary:hover { background: white; color: var(--primary-color); border: 1px solid var(--primary-color); }
 .btn-secondary { border: 1px solid white; color: white; padding: 10px 20px; border-radius: 5px; font-weight: 500;}
 .btn-secondary:hover { background: white; color: var(--primary-color); }
@@ -43,7 +46,7 @@ img { max-width: 100%; display: block; }
 .btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
-/* --- HERO & COLLAGE SECTIONS --- */
+/* --- HERO & SLIDERS --- */
 .hero-home, .page-header { 
     position: relative;
     display: flex; 
@@ -57,15 +60,20 @@ img { max-width: 100%; display: block; }
 .hero-home { min-height: 60vh; }
 .page-header { min-height: 50vh; padding: 60px 0; }
 
+/* Background Slider Logic */
+.header-bg-slider {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+}
+.header-bg-slider .slide img { height: 100%; width: 100%; object-fit: cover; }
+
+/* Existing Home Collage */
 .hero-collage-bg {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    grid-template-rows: 1fr 1fr;    
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;    
     z-index: 0;
 }
 .hero-collage-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+
 .hero-overlay { 
     background: rgba(42, 128, 166, 0.85); 
     width: 100%; height: 100%; 
@@ -73,13 +81,8 @@ img { max-width: 100%; display: block; }
     z-index: 1; 
 }
 .hero-content, .page-header .container {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;
 }
 .hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); line-height: 1.2; }
 .hero-content p, .page-header p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
@@ -97,14 +100,10 @@ img { max-width: 100%; display: block; }
 .merch-image img { width: 100%; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid white; }
 .merch-text { flex: 1; }
 .merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
-.merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
 
 /* Content Wrapper */
 .content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
-.text-content h3 { margin-top: 20px; margin-bottom: 10px; color: var(--primary-color); }
-.mission-list li { margin-bottom: 10px; padding-left: 20px; position: relative; }
-.mission-list li:before { content: "•"; color: var(--primary-color); font-weight: bold; position: absolute; left: 0; }
 .image-content { width: 100%; }
 .image-content img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
@@ -115,9 +114,11 @@ img { max-width: 100%; display: block; }
     text-align: center; transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column;
 }
 .hub-card:hover { transform: translateY(-5px); }
+.hub-card-img-top { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #eee; }
 .hub-card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .hub-card h3 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 15px; }
 
+/* Specific Hub Card Backgrounds (for Hub Selection Page) */
 #houston-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/houston-hub-background.jpg') center/cover; color: white; }
 #austin-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/austin-hub-background.jpg') center/cover; color: white; }
 #new-hub-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/new-hub-background.jpg') center/cover; color: white; }
@@ -128,6 +129,7 @@ img { max-width: 100%; display: block; }
 
 /* Sliders */
 .slider-container { position: relative; max-width: 800px; margin: 0 auto; overflow: hidden; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.header-bg-slider { border-radius: 0; box-shadow: none; max-width: 100%; } /* Remove shadow for background slider */
 .slider-track { display: flex; transition: transform 0.5s ease-in-out; width: 100%; }
 .slide { min-width: 100%; }
 .slide img { width: 100%; height: 400px; object-fit: cover; display: block; }
@@ -135,10 +137,18 @@ img { max-width: 100%; display: block; }
 .prev-btn { left: 10px; }
 .next-btn { right: 10px; }
 
-/* Directors Grid */
+/* --- DIRECTORS FIX --- */
 .directors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
 .director-card { text-align: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-.director-card img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--primary-color); }
+.director-card img { 
+    width: 150px; 
+    height: 150px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin: 0 auto 15px auto; /* FIXED: Centered the image */
+    border: 3px solid var(--primary-color); 
+    display: block; 
+}
 
 /* Footer */
 .footer { background: var(--primary-color); color: white; padding: 40px 0 20px; margin-top: 50px; }
@@ -152,12 +162,35 @@ img { max-width: 100%; display: block; }
 .social-icon img { width: 48px; height: 48px; filter: invert(1); } 
 .social-icon:hover { opacity: 0.8; }
 
+/* Careers & Modal */
+.job-form-container { background: #f9f9f9; padding: 30px; border-radius: 10px; border: 1px solid #ddd; margin-top: 40px; max-width: 700px; margin-left: auto; margin-right: auto; }
+.form-group { margin-bottom: 20px; text-align: left; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 5px; color: var(--primary-color); }
+.form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; box-sizing: border-box;}
+.job-list-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.job-card { background: white; border: 1px solid #eee; border-left: 5px solid var(--primary-color); padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; }
+.job-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+.job-card h3 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.5rem; }
+.job-meta { font-size: 0.9rem; color: #777; margin-bottom: 15px; font-weight: bold; }
+.job-card p { margin-bottom: 20px; }
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+.modal-content { background-color: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative; animation: fadeIn 0.3s; }
+.close-modal { position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer; color: #aaa; }
+.close-modal:hover { color: black; }
+@keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+
 
 /* ========================================= */
-/* === MOBILE RESPONSIVENESS FIXES === */
+/* === MOBILE RESPONSIVENESS FIXES (CLEANED UP) === */
 /* ========================================= */
 @media (max-width: 768px) {
     
+    /* 1. TIGHTER SPACING FOR CLEANER LOOK */
+    .section { padding: 40px 0; } /* Reduced from 60px */
+    .page-header { min-height: 35vh; padding: 40px 0; } /* Reduced height so it doesn't take full screen */
+    .hero-home { min-height: 50vh; }
+    
+    /* 2. NAVIGATION */
     .hamburger { display: block; z-index: 10000; position: relative;} 
     .nav-links {
         position: fixed; right: 0px; top: 0px; height: 100vh;
@@ -168,114 +201,26 @@ img { max-width: 100%; display: block; }
     }
     .nav-links.nav-active { transform: translateX(0%); }
     .nav-links li { opacity: 0; margin: 20px 0; }
-    
-    /* Ensure links have color */
     .nav-links a { color: #333; font-size: 1.2rem; }
 
-    .hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
-    .hamburger.toggle .bar:nth-child(2) { opacity: 0; }
-    .hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+    /* 3. TYPOGRAPHY SCALING */
+    .hero-content h1, .page-header h1 { font-size: 2rem; padding: 0 10px; line-height: 1.3; }
+    .hero-content p, .page-header p { font-size: 1rem; padding: 0 15px; margin-top: 15px;}
+    .section-title { font-size: 2rem; margin-bottom: 30px;}
+
+    /* 4. CONTENT STACKING */
+    .content-wrapper { display: flex; flex-direction: column; gap: 30px; } /* Stack text and images */
+    .merch-container { flex-direction: column; text-align: center; gap: 30px;}
+    .merch-image { max-width: 100%; }
     
-    .hero-content h1, .page-header h1 { font-size: 2rem; padding: 0 10px; }
-    .hero-content p, .page-header p { font-size: 1rem; padding: 0 15px; }
-    .section-title { font-size: 2rem; }
-    .content-wrapper { display: flex; flex-direction: column; gap: 30px; }
-    .merch-container { flex-direction: column; text-align: center; }
-    .merch-image { max-width: 100%; margin-bottom: 20px; }
-    .footer-content { flex-direction: column; text-align: center; align-items: center; }
+    /* 5. FOOTER ALIGNMENT */
+    .footer-content { flex-direction: column; text-align: center; align-items: center; gap: 30px;}
     .social-icons { justify-content: center; }
-
-    /* --- MOBILE COLLAGE SETTINGS --- */
-
-    /* 1. HIDE collage specifically on Hope Events & About Us */
-    .page-header .hero-collage-bg {
-        display: none; 
-    }
-    /* Reduce height of header since collage is gone */
-    .page-header {
-        min-height: 30vh; 
-    }
-
-    /* 2. KEEP collage on Home Page, but stack it */
+    
+    /* 6. COLLAGE & GRID FIXES */
     .hero-home .hero-collage-bg { 
         grid-template-columns: 1fr; 
         grid-template-rows: repeat(4, 1fr); 
     }
-}
-
-/* --- ANIMATIONS --- */
-@keyframes navLinkFade {
-    from { opacity: 0; transform: translateX(50px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-/* --- CAREERS PAGE STYLES --- */
-.job-form-container {
-    background: #f9f9f9;
-    padding: 30px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    margin-top: 40px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.form-group { margin-bottom: 20px; text-align: left; }
-.form-group label { display: block; font-weight: 600; margin-bottom: 5px; color: var(--primary-color); }
-.form-group input, .form-group textarea {
-    width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;
-}
-
-/* Job Cards */
-.job-list-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-.job-card {
-    background: white; border: 1px solid #eee; border-left: 5px solid var(--primary-color);
-    padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
-}
-.job-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
-.job-card h3 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.5rem; }
-.job-meta { font-size: 0.9rem; color: #777; margin-bottom: 15px; font-weight: bold; }
-.job-card p { margin-bottom: 20px; }
-
-/* Modal (Popup) */
-.modal {
-    display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center;
-}
-.modal-content {
-    background-color: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative;
-    animation: fadeIn 0.3s;
-}
-.close-modal { position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer; color: #aaa; }
-.close-modal:hover { color: black; }
-
-@keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
-
-/* --- HEADER BACKGROUND SLIDER --- */
-/* This positions the slider behind the text overlay */
-.header-bg-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0; /* Behind the overlay */
-}
-
-/* Ensure the images cover the whole area nicely */
-.header-bg-slider .slide img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover; /* This prevents stretching/distortion */
-}
-
-/* --- ESSENTIALS CARD IMAGES --- */
-/* This styles the new images in Hope Events */
-.hub-card-img-top {
-    width: 100%;
-    height: 200px; /* Fixed height for uniformity */
-    object-fit: cover;
-    border-bottom: 1px solid #eee;
+    .hub-grid { grid-template-columns: 1fr; } /* Force 1 column on mobile */
 }
