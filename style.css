@@ -44,36 +44,18 @@ ul { list-style: none; }
 
 /* --- HERO SECTIONS --- */
 
-/* Home Hero with Collage Support */
+/* Restored Single Image Background */
 .hero-home { 
-    position: relative;
+    background: #ddd url('images/home-hero-bg.jpg') center/cover; 
     height: 60vh; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
     text-align: center; 
     color: white; 
-    overflow: hidden; /* Ensures collage doesn't spill out */
-    background: #ddd; /* Fallback */
+    position: relative;
 }
 
-/* The Collage Grid Background */
-.hero-collage-bg {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columns */
-    grid-template-rows: 1fr 1fr;    /* 2 rows */
-    z-index: 0;
-}
-.hero-collage-bg img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover;
-    opacity: 0.8; /* Slight fade so they blend */
-}
-
-/* Page Header for other pages */
 .page-header { 
     background: linear-gradient(rgba(42, 128, 166, 0.7), rgba(42, 128, 166, 0.7)), url('images/home-hero-bg.jpg') center/cover;
     color: white; 
@@ -82,12 +64,11 @@ ul { list-style: none; }
 }
 
 .hero-overlay { 
-    background: rgba(42, 128, 166, 0.85); /* Higher opacity for readability over collage */
+    background: rgba(42, 128, 166, 0.7); 
     width: 100%; height: 100%; 
     display: flex; align-items: center; justify-content: center; flex-direction: column;
-    position: relative; 
-    z-index: 1; /* Sits on top of collage */
 }
+
 .hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
 .hero-content h1 { font-size: 3rem; }
 .page-header h1 { font-size: 2.5rem; }
@@ -99,7 +80,7 @@ ul { list-style: none; }
 
 /* Tight Spacing for Recent Moments */
 .events-section-tight {
-    padding-top: 20px !important; /* Forces smaller gap */
+    padding-top: 20px !important;
     padding-bottom: 60px;
 }
 
@@ -167,6 +148,7 @@ ul { list-style: none; }
 #houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; }
 #houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
+
 /* === MOBILE RESPONSIVENESS === */
 @media (max-width: 768px) {
     .hamburger { display: block; z-index: 1001;}
@@ -187,7 +169,4 @@ ul { list-style: none; }
     .merch-image { max-width: 100%; margin-bottom: 20px; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
-    
-    /* Ensure collage is visible on mobile */
-    .hero-collage-bg { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
 }
