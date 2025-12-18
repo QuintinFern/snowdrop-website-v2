@@ -43,21 +43,65 @@ ul { list-style: none; }
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
 /* --- HERO SECTIONS --- */
-.hero-home { background: #ddd url('images/home-hero-bg.jpg') center/cover; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative;}
+
+/* Home Hero with Collage Support */
+.hero-home { 
+    position: relative;
+    height: 60vh; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
+    color: white; 
+    overflow: hidden; /* Ensures collage doesn't spill out */
+    background: #ddd; /* Fallback */
+}
+
+/* The Collage Grid Background */
+.hero-collage-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+    grid-template-rows: 1fr 1fr;    /* 2 rows */
+    z-index: 0;
+}
+.hero-collage-bg img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+    opacity: 0.8; /* Slight fade so they blend */
+}
+
+/* Page Header for other pages */
 .page-header { 
     background: linear-gradient(rgba(42, 128, 166, 0.7), rgba(42, 128, 166, 0.7)), url('images/home-hero-bg.jpg') center/cover;
     color: white; 
     padding: 80px 0;
     text-align: center; 
 }
-.page-header h1 { font-size: 2.5rem; margin-bottom: 10px; font-family: var(--font-heading); }
-.hero-overlay { background: rgba(42, 128, 166, 0.7); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;}
-.hero-content h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
+
+.hero-overlay { 
+    background: rgba(42, 128, 166, 0.85); /* Higher opacity for readability over collage */
+    width: 100%; height: 100%; 
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    position: relative; 
+    z-index: 1; /* Sits on top of collage */
+}
+.hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
+.hero-content h1 { font-size: 3rem; }
+.page-header h1 { font-size: 2.5rem; }
 
 /* General Sections */
 .section { padding: 60px 0; }
 .section-title { text-align: center; color: var(--primary-color); margin-bottom: 40px; font-size: 2.5rem; font-family: var(--font-heading); }
 .section-subtitle { text-align: center; color: #666; margin-bottom: 30px; margin-top: -30px; }
+
+/* Tight Spacing for Recent Moments */
+.events-section-tight {
+    padding-top: 20px !important; /* Forces smaller gap */
+    padding-bottom: 60px;
+}
 
 /* Merch Section */
 .merch-section { background-color: #e9f5fa; }
@@ -68,30 +112,15 @@ ul { list-style: none; }
 .merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
 .merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
 
-/* --- CONTENT WRAPPER (Fixed for Hope Events & Mobile) --- */
-.content-wrapper { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; /* Equal split */
-    gap: 60px; /* More space between text and image */
-    align-items: start; /* Aligns image to top of text, prevents "floating" look */
-}
-
+/* Content Wrapper & Text Styling */
+.content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
 .text-content h3 { margin-top: 20px; margin-bottom: 10px; color: var(--primary-color); }
 .mission-list li { margin-bottom: 10px; padding-left: 20px; position: relative; }
 .mission-list li:before { content: "•"; color: var(--primary-color); font-weight: bold; position: absolute; left: 0; }
 .mission-list li strong { color: var(--primary-color); } 
-
-.image-content {
-    width: 100%;
-}
-.image-content img { 
-    width: 100%; 
-    height: auto; 
-    border-radius: 8px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-    display: block; 
-}
+.image-content { width: 100%; }
+.image-content img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: block; }
 
 /* Hub Cards */
 .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
@@ -138,7 +167,6 @@ ul { list-style: none; }
 #houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; }
 #houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
-
 /* === MOBILE RESPONSIVENESS === */
 @media (max-width: 768px) {
     .hamburger { display: block; z-index: 1001;}
@@ -154,13 +182,12 @@ ul { list-style: none; }
     .hamburger.toggle .bar:nth-child(2) { opacity: 0; }
     .hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
     
-    /* STACK CONTENT ON MOBILE */
     .content-wrapper, .merch-container { flex-direction: column; text-align: center; display: flex; }
-    
-    /* Spacing for image on mobile */
     .image-content { margin-top: 30px; }
-    
     .merch-image { max-width: 100%; margin-bottom: 20px; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
+    
+    /* Ensure collage is visible on mobile */
+    .hero-collage-bg { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
 }
