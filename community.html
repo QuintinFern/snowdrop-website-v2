@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Chat | Snowdrop United</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="chat.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="images/logo-primary.png" alt="Snowdrop United Logo">
+                <span>Snowdrop United</span>
+            </div>
+            
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="hope-events.html">Hope Events</a></li>
+                <li><a href="about-us.html">About Us</a></li>
+                
+                <li><a href="careers.html">Careers</a></li>
+                
+                <li><a href="index.html#contact">Contact</a></li>
+                
+                <li><button id="logout-btn" class="btn-nav">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="page-header" style="min-height: 30vh;">
+        <div class="hero-overlay">
+            <div class="container">
+                <h1>Community Chat</h1>
+                <p>Connect with other volunteers and organizers.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container chat-section">
+        <div class="chat-window" id="messages-container">
+            <p style="text-align: center; color: #999; margin-top: 20px;">Loading messages...</p>
+        </div>
+        
+        <form id="message-form" class="message-input-container">
+            <input type="text" id="message-input" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit" class="btn-primary">Send</button>
+        </form>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
