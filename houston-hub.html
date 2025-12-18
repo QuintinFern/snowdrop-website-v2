@@ -6,10 +6,15 @@
     <title>Houston Hub | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { loadComponents } from './components.js';
+        document.addEventListener('DOMContentLoaded', loadComponents);
+    </script>
 </head>
 <body>
 
-<nav class="navbar" id="main-navbar"></nav>
+    <nav class="navbar" id="main-navbar"></nav>
 
     <section class="page-header">
         <div class="container">
@@ -27,39 +32,19 @@
                 <br>
                 <a href="mailto:info@snowdropunited.org" class="btn-primary">Contact Houston Hub</a>
             </div>
+            
             <div class="image-content">
                 <div class="slider-container">
                     <button class="slider-btn prev-btn">&#10094;</button>
-                    <div class="slider-track" id="houston-slider">
-                        </div>
+                    <div class="slider-track" id="houston-slider"></div>
                     <button class="slider-btn next-btn">&#10095;</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-info">
-                <h3>Snowdrop United</h3>
-                <p>Spreading Hope</p>
-                <p class="ein-text">Non-Profit EIN: <strong>883572911</strong></p>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/snowdropunited" target="_blank" class="social-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
-                    </a>
-                    <a href="https://www.instagram.com/snowdropunited" target="_blank" class="social-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-                    </a>
-                </div>
-            </div>
-            <div class="footer-links">
-                <a href="mailto:info@snowdropunited.org" class="btn btn-email">&#9993; info@snowdropunited.org</a>
-                <a href="https://square.link/u/DPaykecu" class="btn btn-secondary">Donate Now</a>
-            </div>
-        </div>
-        <div class="footer-bottom"><p>&copy; 2025 Snowdrop United.</p></div>
-    </footer>
+    <footer class="footer" id="main-footer"></footer>
+
     <script src="app.js"></script>
 </body>
 </html>

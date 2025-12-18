@@ -1,7 +1,6 @@
 import { auth, db, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, onAuthStateChanged } from "./firebase-config.js";
 
 // === CONFIGURATION ===
-// CHANGE THIS TO YOUR EXACT LOGIN EMAIL
 const ADMIN_EMAIL = "admin@snowdropunited.org"; 
 
 const adminPanel = document.getElementById('admin-panel');
@@ -11,29 +10,28 @@ const modal = document.getElementById('application-modal');
 const appForm = document.getElementById('application-form');
 const closeModal = document.querySelector('.close-modal');
 
-// 1. Check Authentication & Role
+// 1. SECURITY CHECK: Redirect if not logged in
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is logged in
+        // User is logged in, allow them to stay
         console.log("Logged in as:", user.email);
         
         // Show Admin Panel ONLY if email matches
         if(user.email === ADMIN_EMAIL) {
             adminPanel.style.display = "block";
         } else {
-            adminPanel.style.display = "none";
+            if(adminPanel) adminPanel.style.display = "none";
         }
     } else {
-        // User is not logged in
-        // Ideally, we redirect to login if they try to apply, 
-        // but for now we let them see the jobs.
-        adminPanel.style.display = "none";
+        // === NEW: User is NOT logged in. Redirect to Login ===
+        window.location.href = "login.html";
     }
 });
 
 // 2. Load Jobs from Database
 const q = query(collection(db, "jobs"), orderBy("createdAt", "desc"));
 onSnapshot(q, (snapshot) => {
+    if(!jobList) return;
     jobList.innerHTML = ""; // Clear list
     
     if (snapshot.empty) {
@@ -57,11 +55,6 @@ onSnapshot(q, (snapshot) => {
     // Add Click Listeners to new Apply Buttons
     document.querySelectorAll('.apply-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            if(!auth.currentUser) {
-                alert("Please log in to apply for jobs.");
-                window.location.href = "login.html";
-                return;
-            }
             openModal(e.target.dataset.id, e.target.dataset.title);
         });
     });
@@ -94,32 +87,34 @@ if(postJobForm) {
 }
 
 // 4. Submit Application
-appForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const jobId = document.getElementById('app-job-id').value;
-    const name = document.getElementById('app-name').value;
-    const email = document.getElementById('app-email').value;
-    const cover = document.getElementById('app-cover').value;
-    const jobTitle = document.getElementById('modal-job-title').innerText.replace("Apply for: ", "");
+if(appForm) {
+    appForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const jobId = document.getElementById('app-job-id').value;
+        const name = document.getElementById('app-name').value;
+        const email = document.getElementById('app-email').value;
+        const cover = document.getElementById('app-cover').value;
+        const jobTitle = document.getElementById('modal-job-title').innerText.replace("Apply for: ", "");
 
-    try {
-        await addDoc(collection(db, "applications"), {
-            jobId: jobId,
-            jobTitle: jobTitle,
-            applicantName: name,
-            applicantEmail: email,
-            coverLetter: cover,
-            applicantUid: auth.currentUser.uid,
-            appliedAt: serverTimestamp()
-        });
-        alert("Application sent! We will contact you soon.");
-        modal.style.display = "none";
-        appForm.reset();
-    } catch (error) {
-        alert("Error sending application: " + error.message);
-    }
-});
+        try {
+            await addDoc(collection(db, "applications"), {
+                jobId: jobId,
+                jobTitle: jobTitle,
+                applicantName: name,
+                applicantEmail: email,
+                coverLetter: cover,
+                applicantUid: auth.currentUser.uid,
+                appliedAt: serverTimestamp()
+            });
+            alert("Application sent! We will contact you soon.");
+            modal.style.display = "none";
+            appForm.reset();
+        } catch (error) {
+            alert("Error sending application: " + error.message);
+        }
+    });
+}
 
 // Modal Logic
 function openModal(id, title) {
@@ -134,5 +129,5 @@ function openModal(id, title) {
     modal.style.display = "flex";
 }
 
-closeModal.addEventListener('click', () => { modal.style.display = "none"; });
+if(closeModal) closeModal.addEventListener('click', () => { modal.style.display = "none"; });
 window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
