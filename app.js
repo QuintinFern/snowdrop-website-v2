@@ -1,30 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- MOBILE MENU LOGIC ---
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    const links = document.querySelectorAll('.nav-links li');
+    // Note: Mobile menu logic is now handled in components.js
 
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('nav-active');
-            hamburger.classList.toggle('toggle');
-            links.forEach((link, index) => {
-                if (link.style.animation) {
-                    link.style.animation = '';
-                } else {
-                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-                }
-            });
-        });
-    }
-
-    // ================= IMAGE COUNTERS & TITLES =================
+    // ================= IMAGE COUNTERS & CONFIGURATION =================
     const config = {
         mainEvents: 5,      
-        directors: 6,   // Updated to 6
+        directors: 6,       
         houstonHub: 5,      
-        austinHub: 5        
+        austinHub: 5,
+        // NEW: Config for the header background sliders
+        // This assumes you have images named 'collage-about-us-1.jpg' through '4.jpg'
+        aboutHeader: 4,     
+        hopeHeader: 4       
     };
 
     // Specific titles for the directors
@@ -37,13 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
         "Director"
     ];
 
+    // ================= IMAGE LOADER FUNCTION =================
     function loadImages(containerId, count, prefix, isSlider = false) {
         const container = document.getElementById(containerId);
-        if (!container) return;
+        if (!container) return; // Exit if element doesn't exist on this page
 
         for (let i = 1; i <= count; i++) {
             const wrapper = document.createElement('div');
-            wrapper.className = isSlider ? 'slide' : 'director-card'; // Default class
+            // If it's a slider, use 'slide' class. If it's grid, use 'director-card' or 'grid-item'
+            wrapper.className = isSlider ? 'slide' : 'director-card'; 
 
             const img = document.createElement('img');
             img.src = `images/${prefix}-${i}.jpg`; 
@@ -52,41 +41,43 @@ document.addEventListener('DOMContentLoaded', () => {
             // Error handling: Hide if image missing
             img.onerror = function() { 
                 if(isSlider) this.parentElement.style.display = 'none'; 
-                else this.src = 'images/logo-primary.png'; // Fallback for directors if photo missing
+                else this.src = 'images/logo-primary.png'; // Fallback for directors
             };
 
             wrapper.appendChild(img);
 
             // Special Logic for Directors
             if (prefix === 'director') {
-                // 1. Add Name Placeholder
                 const name = document.createElement('h3');
-                name.textContent = "Board Member"; // You can change this to real names later
+                name.textContent = "Board Member"; 
                 
-                // 2. Add Title (from the list above)
                 const title = document.createElement('p');
-                title.textContent = directorTitles[i-1]; 
+                title.textContent = directorTitles[i-1] || "Member"; 
                 title.style.color = "#2a80a6";
                 title.style.fontWeight = "bold";
 
                 wrapper.appendChild(name);
                 wrapper.appendChild(title);
-            } else {
-                // For regular grids (if you add any later)
-                if(!isSlider) wrapper.className = 'grid-item';
-            }
+            } 
 
             container.appendChild(wrapper);
         }
     }
 
+    // ================= INITIALIZE SECTIONS =================
+    // Load existing sections
     loadImages('event-slider', config.mainEvents, 'event-photo', true);
     loadImages('directors-grid', config.directors, 'director');
     loadImages('houston-slider', config.houstonHub, 'houston-hub-event', true);
     loadImages('austin-slider', config.austinHub, 'austin-hub-event', true);
 
+    // NEW: Load images for the new header backgrounds
+    // This uses your existing collage images (collage-about-us-1.jpg, etc.)
+    loadImages('about-header-slider', config.aboutHeader, 'collage-about-us', true);
+    loadImages('hope-header-slider', config.hopeHeader, 'collage-hope-events', true);
 
-    // --- SLIDER LOGIC ---
+
+    // ================= SLIDER LOGIC =================
     const sliders = document.querySelectorAll('.slider-container');
     
     sliders.forEach(slider => {
@@ -99,12 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentIndex = 0;
         
         function updateSlide() {
-            const visibleSlides = track.children.length;
+            const visibleSlides = track.children.length; // Count actual loaded slides
             if (visibleSlides === 0) return;
+            
             const percentage = -(currentIndex * 100); 
             track.style.transform = `translateX(${percentage}%)`;
         }
 
+        // Manual Buttons (if they exist)
         if(nextBtn) {
             nextBtn.addEventListener('click', () => {
                 const total = track.children.length;
@@ -121,11 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
+        // Auto-Play
         setInterval(() => {
             if(track.children.length > 0) {
                 currentIndex = (currentIndex + 1) % track.children.length;
                 updateSlide();
             }
-        }, 5000);
+        }, 5000); // Change slide every 5 seconds
     });
 });

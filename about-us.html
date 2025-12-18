@@ -6,22 +6,27 @@
     <title>About Us | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { loadComponents } from './components.js';
+        document.addEventListener('DOMContentLoaded', loadComponents);
+    </script>
 </head>
 <body>
 
-<nav class="navbar" id="main-navbar"></nav>
+    <nav class="navbar" id="main-navbar"></nav>
 
     <section class="page-header">
-        <div class="hero-collage-bg">
-            <img src="images/collage-about-us-1.jpg" alt="Collage 1">
-            <img src="images/collage-about-us-2.jpg" alt="Collage 2">
-            <img src="images/collage-about-us-3.jpg" alt="Collage 3">
-            <img src="images/collage-about-us-4.jpg" alt="Collage 4">
+        <div class="slider-container header-bg-slider">
+            <div class="slider-track" id="about-header-slider"></div>
         </div>
+
         <div class="hero-overlay">
             <div class="container">
                 <h1>About Us</h1>
-                <p style="max-width: 800px; margin: 0 auto; line-height: 1.8;">From humble beginnings, we have grown to provide far more than meals, but we will never forget how we started. We made lifelong memories while working out of our kitchens and forged new friendships while handing out meals for the first time. We may no longer erratically swerve through Houston to find people in need, but we are proud to have expanded our reach and strive to keeping making a positive impact in our community. We wish to welcome anyone to join us!</p>
+                <p style="max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                    From humble beginnings, we have grown to provide far more than meals, but we will never forget how we started. We made lifelong memories while working out of our kitchens and forged new friendships while handing out meals for the first time. We may no longer erratically swerve through Houston to find people in need, but we are proud to have expanded our reach and strive to keep making a positive impact in our community. We wish to welcome anyone to join us!
+                </p>
             </div>
         </div>
     </section>
@@ -74,28 +79,8 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-info">
-                <h3>Snowdrop United</h3>
-                <p>Spreading Hope</p>
-                <p class="ein-text">Non-Profit EIN: <strong>883572911</strong></p>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/snowdropunited" target="_blank" class="social-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
-                    </a>
-                    <a href="https://www.instagram.com/snowdropunited" target="_blank" class="social-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-                    </a>
-                </div>
-            </div>
-            <div class="footer-links">
-                <a href="mailto:info@snowdropunited.org" class="btn btn-email">&#9993; info@snowdropunited.org</a>
-                <a href="https://square.link/u/DPaykecu" class="btn btn-secondary">Donate Now</a>
-            </div>
-        </div>
-        <div class="footer-bottom"><p>&copy; 2025 Snowdrop United.</p></div>
-    </footer>
+    <footer class="footer" id="main-footer"></footer>
+
     <script src="app.js"></script>
 </body>
 </html>
