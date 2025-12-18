@@ -159,7 +159,7 @@ img { max-width: 100%; display: block; }
 .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; font-size: 0.9rem; width: 100%; }
 .social-icons { margin-top: 15px; display: flex; gap: 15px; }
 .social-icon { color: white; transition: opacity 0.3s; display: inline-block;}
-.social-icon img { width: 48px; height: 48px; filter: invert(1); } 
+.social-icon img { width: 48px; height: 48px; } 
 .social-icon:hover { opacity: 0.8; }
 
 /* Careers & Modal */

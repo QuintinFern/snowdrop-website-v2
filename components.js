@@ -50,14 +50,14 @@ export function loadComponents() {
             <h3>Snowdrop United</h3>
             <p>Spreading Hope</p>
             <p class="ein-text">Non-Profit EIN: <strong>883572911</strong></p>
-            <div class="social-icons">
-                <a href="https://www.facebook.com/snowdropunited" target="_blank" class="social-icon">
-                    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
-                </a>
-                <a href="https://www.instagram.com/snowdropunited" target="_blank" class="social-icon">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-                </a>
-            </div>
+ <div class="social-icons">
+    <a href="https://www.facebook.com/snowdropunited" target="_blank" class="social-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
+    </a>
+    <a href="https://www.instagram.com/snowdropunited" target="_blank" class="social-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+    </a>
+</div>
         </div>
         <div class="footer-links">
             <a href="mailto:info@snowdropunited.org" class="btn btn-email">&#9993; info@snowdropunited.org</a>
