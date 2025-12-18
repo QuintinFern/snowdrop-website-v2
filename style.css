@@ -11,8 +11,9 @@
 body { font-family: var(--font-body); margin: 0; padding: 0; color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
 a { text-decoration: none; }
 ul { list-style: none; }
+img { max-width: 100%; display: block; } /* Prevents images from overflowing containers */
 
-/* Navigation */
+/* --- NAVIGATION --- */
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 .navbar { background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 10px 0; position: sticky; top: 0; z-index: 1000; }
 .nav-container { display: flex; justify-content: space-between; align-items: center; }
@@ -42,9 +43,8 @@ ul { list-style: none; }
 .btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
-/* --- HERO SECTIONS (COLLAGE ENABLED) --- */
-
-/* Base Styles for Headers */
+/* --- HERO & COLLAGE SECTIONS --- */
+/* Parent container for Hero */
 .hero-home, .page-header { 
     position: relative;
     display: flex; 
@@ -52,58 +52,54 @@ ul { list-style: none; }
     justify-content: center; 
     text-align: center; 
     color: white; 
-    overflow: hidden; /* Contains the collage */
-    background: #2a80a6; /* Fallback color */
+    overflow: hidden; 
+    background: #2a80a6; 
 }
 
-/* SIZING UPDATES HERE */
-.hero-home { height: 60vh; }
+/* Height Settings */
+.hero-home { min-height: 60vh; } /* Changed to min-height for flexibility */
+.page-header { min-height: 50vh; padding: 60px 0; }
 
-/* UPDATED: Added min-height so it isn't squished */
-.page-header { 
-    min-height: 50vh; 
-    padding: 0; /* Flexbox centers the text vertically */
-}
-
-/* The Collage Grid Background */
+/* The Collage Grid (Desktop: 2x2) */
 .hero-collage-bg {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columns */
-    grid-template-rows: 1fr 1fr;    /* 2 rows */
-    z-index: 0;
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr 1fr;    
+    z-index: 0; /* Keeps it at the back */
 }
 .hero-collage-bg img {
     width: 100%; 
     height: 100%; 
     object-fit: cover;
-    opacity: 0.8; /* Slight fade so they blend */
+    opacity: 0.8; 
 }
 
-/* The Dark Overlay (Sits on top of collage, below text) */
+/* The Overlay (Sits on top of collage) */
 .hero-overlay { 
-    background: rgba(42, 128, 166, 0.85); /* Solid enough to read text */
+    background: rgba(42, 128, 166, 0.85); 
     width: 100%; height: 100%; 
     position: absolute; top: 0; left: 0;
     z-index: 1; 
 }
-/* Container for text (Sits on top of overlay) */
+
+/* The Content (Sits on top of everything) */
 .hero-content, .page-header .container {
     position: relative;
-    z-index: 2;
+    z-index: 2; /* Higher than collage and overlay */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    width: 100%; /* Ensures text doesn't get cut off */
+    width: 100%;
 }
 
-.hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
-.page-header h1 { font-size: 3rem; } /* Matched Home Size */
+/* Typography for Hero */
+.hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); line-height: 1.2; }
+.hero-content p, .page-header p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
 
-/* General Sections */
+/* --- GENERAL SECTIONS --- */
 .section { padding: 60px 0; }
 .section-title { text-align: center; color: var(--primary-color); margin-bottom: 40px; font-size: 2.5rem; font-family: var(--font-heading); }
 .section-subtitle { text-align: center; color: #666; margin-bottom: 30px; margin-top: -30px; }
@@ -123,25 +119,33 @@ ul { list-style: none; }
 .merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
 .merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
 
-/* Content Wrapper & Text Styling */
+/* Content Wrapper (Text + Image Side by Side) */
 .content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
 .text-content h3 { margin-top: 20px; margin-bottom: 10px; color: var(--primary-color); }
 .mission-list li { margin-bottom: 10px; padding-left: 20px; position: relative; }
 .mission-list li:before { content: "•"; color: var(--primary-color); font-weight: bold; position: absolute; left: 0; }
-.mission-list li strong { color: var(--primary-color); } 
 .image-content { width: 100%; }
-.image-content img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: block; }
+.image-content img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
 /* Hub Cards */
 .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
 .hub-card { 
     background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-    text-align: center; transition: transform 0.3s; border: 1px solid #eee; 
+    text-align: center; transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column;
 }
 .hub-card:hover { transform: translateY(-5px); }
-.hub-card-body { padding: 30px; }
+.hub-card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .hub-card h3 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 15px; }
+
+/* Hub Backgrounds */
+#houston-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/houston-hub-background.jpg') center/cover; color: white; }
+#austin-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/austin-hub-background.jpg') center/cover; color: white; }
+#new-hub-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/new-hub-background.jpg') center/cover; color: white; }
+#houston-card h3, #austin-card h3, #new-hub-card h3 { color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+#houston-card p, #austin-card p, #new-hub-card p { color: white; font-weight: 500; margin-bottom: 20px; }
+#houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; margin-top: auto;}
+#houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
 /* Sliders */
 .slider-container { position: relative; max-width: 800px; margin: 0 auto; overflow: hidden; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -169,37 +173,48 @@ ul { list-style: none; }
 .social-icon img { width: 48px; height: 48px; filter: invert(1); } 
 .social-icon:hover { opacity: 0.8; }
 
-/* Hub Backgrounds */
-#houston-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/houston-hub-background.jpg') center/cover; color: white; }
-#austin-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/austin-hub-background.jpg') center/cover; color: white; }
-#new-hub-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/new-hub-background.jpg') center/cover; color: white; }
-#houston-card h3, #austin-card h3, #new-hub-card h3 { color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-#houston-card p, #austin-card p, #new-hub-card p { color: white; font-weight: 500; }
-#houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; }
-#houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
-
-/* === MOBILE RESPONSIVENESS === */
+/* ========================================= */
+/* === MOBILE RESPONSIVENESS FIXES (Important) === */
+/* ========================================= */
 @media (max-width: 768px) {
-    .hamburger { display: block; z-index: 1001;}
+    
+    /* --- Fix Sidebar Z-Index --- */
+    /* Forces menu to sit on TOP of the collage */
+    .hamburger { display: block; z-index: 10000; position: relative;} 
     .nav-links {
-        position: fixed; right: 0px; top: 70px; height: calc(100vh - 70px);
-        background-color: var(--white); display: flex; flex-direction: column; align-items: center;
-        width: 60%; transform: translateX(100%); transition: transform 0.4s ease-in-out;
-        box-shadow: -2px 5px 10px rgba(0,0,0,0.1); padding-top: 50px;
+        position: fixed; right: 0px; top: 0px; height: 100vh;
+        background-color: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 70%; transform: translateX(100%); transition: transform 0.4s ease-in-out;
+        box-shadow: -2px 5px 10px rgba(0,0,0,0.2); 
+        z-index: 9999; /* Higher than hero content */
     }
     .nav-links.nav-active { transform: translateX(0%); }
-    .nav-links li { opacity: 0; }
+    .nav-links li { opacity: 0; margin: 20px 0; }
+
+    /* Hamburger Animation */
     .hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
     .hamburger.toggle .bar:nth-child(2) { opacity: 0; }
     .hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
     
-    .content-wrapper, .merch-container { flex-direction: column; text-align: center; display: flex; }
-    .image-content { margin-top: 30px; }
+    /* --- Fix Text Jumbling & Sizes --- */
+    .hero-content h1, .page-header h1 { font-size: 2rem; padding: 0 10px; } /* Smaller font, add side padding */
+    .hero-content p, .page-header p { font-size: 1rem; padding: 0 15px; } /* Prevent text touching edges */
+    .section-title { font-size: 2rem; }
+    
+    /* --- Fix Layout Stacking --- */
+    .content-wrapper { display: flex; flex-direction: column; gap: 30px; } /* Forces single column text/image */
+    .merch-container { flex-direction: column; text-align: center; }
     .merch-image { max-width: 100%; margin-bottom: 20px; }
+    
+    /* --- Fix Footer --- */
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
     
-    /* Ensure collage is visible on mobile */
-    .hero-collage-bg { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
+    /* --- Fix Collage on Mobile --- */
+    /* Changes 2x2 grid to 1 column so images aren't tiny */
+    .hero-collage-bg { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: repeat(4, 1fr); 
+    }
 }
