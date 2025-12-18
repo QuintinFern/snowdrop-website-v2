@@ -68,16 +68,32 @@ ul { list-style: none; }
 .merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
 .merch-text h4 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; }
 
-/* Content Wrapper & Text Styling */
-.content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+/* --- CONTENT WRAPPER (Fixed for Hope Events & Mobile) --- */
+.content-wrapper { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* Equal split */
+    gap: 60px; /* More space between text and image */
+    align-items: start; /* Aligns image to top of text, prevents "floating" look */
+}
+
 .text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
 .text-content h3 { margin-top: 20px; margin-bottom: 10px; color: var(--primary-color); }
 .mission-list li { margin-bottom: 10px; padding-left: 20px; position: relative; }
 .mission-list li:before { content: "•"; color: var(--primary-color); font-weight: bold; position: absolute; left: 0; }
 .mission-list li strong { color: var(--primary-color); } 
-.image-content img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-/* Hub Cards Base Styles */
+.image-content {
+    width: 100%;
+}
+.image-content img { 
+    width: 100%; 
+    height: auto; 
+    border-radius: 8px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    display: block; 
+}
+
+/* Hub Cards */
 .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
 .hub-card { 
     background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
@@ -113,39 +129,14 @@ ul { list-style: none; }
 .social-icon img { width: 48px; height: 48px; filter: invert(1); } 
 .social-icon:hover { opacity: 0.8; }
 
-
-/* --- SPECIFIC HUB CARD BACKGROUNDS --- */
-#houston-card {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/houston-hub-background.jpg') center/cover;
-    color: white;
-}
-#austin-card {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/austin-hub-background.jpg') center/cover;
-    color: white;
-}
-#new-hub-card {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/new-hub-background.jpg') center/cover;
-    color: white;
-}
-
-/* Force text inside background cards to be white */
-#houston-card h3, #austin-card h3, #new-hub-card h3 {
-    color: white;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-}
-#houston-card p, #austin-card p, #new-hub-card p {
-    color: white;
-    font-weight: 500;
-}
-/* Update card buttons to match the dark background */
-#houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline {
-    border-color: white;
-    color: white;
-}
-#houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover {
-    background: white;
-    color: var(--primary-color);
-}
+/* Hub Backgrounds */
+#houston-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/houston-hub-background.jpg') center/cover; color: white; }
+#austin-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/austin-hub-background.jpg') center/cover; color: white; }
+#new-hub-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/new-hub-background.jpg') center/cover; color: white; }
+#houston-card h3, #austin-card h3, #new-hub-card h3 { color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+#houston-card p, #austin-card p, #new-hub-card p { color: white; font-weight: 500; }
+#houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; }
+#houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
 
 /* === MOBILE RESPONSIVENESS === */
@@ -162,7 +153,13 @@ ul { list-style: none; }
     .hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
     .hamburger.toggle .bar:nth-child(2) { opacity: 0; }
     .hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
-    .content-wrapper, .merch-container { flex-direction: column; text-align: center;}
+    
+    /* STACK CONTENT ON MOBILE */
+    .content-wrapper, .merch-container { flex-direction: column; text-align: center; display: flex; }
+    
+    /* Spacing for image on mobile */
+    .image-content { margin-top: 30px; }
+    
     .merch-image { max-width: 100%; margin-bottom: 20px; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
