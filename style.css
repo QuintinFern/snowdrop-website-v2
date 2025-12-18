@@ -200,7 +200,7 @@ img { max-width: 100%; display: block; }
         z-index: 9999;
     }
     .nav-links.nav-active { transform: translateX(0%); }
-    .nav-links li { opacity: 0; margin: 20px 0; }
+    .nav-links li { opacity: 1; margin: 20px 0; }
     .nav-links a { color: #333; font-size: 1.2rem; }
 
     /* 3. TYPOGRAPHY SCALING */
