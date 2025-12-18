@@ -1,4 +1,5 @@
 // components.js
+import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
 
 export function loadComponents() {
     const path = window.location.pathname;
@@ -26,9 +27,17 @@ export function loadComponents() {
             <li><a href="index.html" class="${isHome ? 'active' : ''}">Home</a></li>
             <li><a href="hope-events.html" class="${isHope ? 'active' : ''}">Hope Events</a></li>
             <li><a href="about-us.html" class="${isAbout ? 'active' : ''}">About Us</a></li>
-            <li><a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a></li>
+            
+            <li id="nav-careers" style="display: none;">
+                <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
+            </li>
+
             <li><a href="index.html#contact" class="${isContact ? 'active' : ''}">Contact</a></li>
-            <li><a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a></li>
+            
+            <li id="nav-auth-item">
+                <a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>
+            </li>
+            
             <li><a href="https://square.link/u/DPaykecu" class="btn-nav">Donate</a></li>
         </ul>
     </div>
@@ -67,6 +76,9 @@ export function loadComponents() {
 
     // Re-initialize Mobile Menu Logic
     initMobileMenu();
+
+    // === NEW: AUTHENTICATION CHECK ===
+    handleAuthStatus();
 }
 
 function initMobileMenu() {
@@ -79,4 +91,41 @@ function initMobileMenu() {
             hamburger.classList.toggle('toggle');
         });
     }
+}
+
+function handleAuthStatus() {
+    onAuthStateChanged(auth, (user) => {
+        const careersLink = document.getElementById('nav-careers');
+        const authItem = document.getElementById('nav-auth-item');
+
+        if (user) {
+            // --- USER IS LOGGED IN ---
+            
+            // 1. Show Careers Link
+            if (careersLink) careersLink.style.display = 'block';
+
+            // 2. Change "Login" to "Logout"
+            if (authItem) {
+                authItem.innerHTML = `<button id="btn-logout" style="background:none; border:none; color: #2a80a6; font-weight:600; font-family:inherit; font-size:1rem; cursor:pointer;">Logout</button>`;
+                
+                // Add Logout Click Event
+                document.getElementById('btn-logout').addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        window.location.href = "index.html";
+                    });
+                });
+            }
+
+        } else {
+            // --- USER IS LOGGED OUT ---
+            
+            // 1. Hide Careers Link
+            if (careersLink) careersLink.style.display = 'none';
+
+            // 2. Ensure "Login" is shown
+            if (authItem) {
+                authItem.innerHTML = `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>`;
+            }
+        }
+    });
 }
