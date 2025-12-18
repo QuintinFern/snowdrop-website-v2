@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | Snowdrop United</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="careers.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="images/logo-primary.png" alt="Snowdrop United Logo">
+                <span>Snowdrop United</span>
+            </div>
+            <div class="hamburger">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="hope-events.html">Hope Events</a></li>
+                <li><a href="about-us.html">About Us</a></li>
+                <li><a href="careers.html" class="active">Careers</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li id="auth-link"><a href="login.html" style="color: var(--primary-color); font-weight: 600;">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="hero-overlay">
+            <div class="container">
+                <h1>Join Our Team</h1>
+                <p>Help us spread hope and make a difference in the community.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        
+        <div id="admin-panel" class="job-form-container" style="display: none;">
+            <h2 class="section-title">Admin: Post a New Job</h2>
+            <form id="post-job-form">
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="job-title" required placeholder="e.g. Volunteer Coordinator">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="job-location" required placeholder="e.g. Houston, TX (Remote allowed)">
+                </div>
+                <div class="form-group">
+                    <label>Description & Requirements</label>
+                    <textarea id="job-desc" rows="5" required placeholder="Describe the role..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Post Job</button>
+            </form>
+            <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">Open Positions</h2>
+            <div id="job-list" class="job-list-grid">
+                <p style="text-align: center; width: 100%;">Loading open positions...</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="application-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-job-title">Apply for Job</h2>
+            <form id="application-form">
+                <input type="hidden" id="app-job-id">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="app-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="app-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Why are you a good fit?</label>
+                    <textarea id="app-cover" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-bottom"><p>&copy; 2025 Snowdrop United.</p></div>
+    </footer>
+</body>
+</html>
