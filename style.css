@@ -42,35 +42,58 @@ ul { list-style: none; }
 .btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
-/* --- HERO SECTIONS --- */
+/* --- HERO SECTIONS (COLLAGE ENABLED) --- */
 
-/* Restored Single Image Background */
-.hero-home { 
-    background: #ddd url('images/home-hero-bg.jpg') center/cover; 
-    height: 60vh; 
+/* Base Styles for Headers */
+.hero-home, .page-header { 
+    position: relative;
     display: flex; 
     align-items: center; 
     justify-content: center; 
     text-align: center; 
     color: white; 
-    position: relative;
+    overflow: hidden; /* Contains the collage */
+    background: #2a80a6; /* Fallback color */
 }
 
-.page-header { 
-    background: linear-gradient(rgba(42, 128, 166, 0.7), rgba(42, 128, 166, 0.7)), url('images/home-hero-bg.jpg') center/cover;
-    color: white; 
-    padding: 80px 0;
-    text-align: center; 
+.hero-home { height: 60vh; }
+.page-header { padding: 80px 0; }
+
+/* The Collage Grid Background */
+.hero-collage-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+    grid-template-rows: 1fr 1fr;    /* 2 rows */
+    z-index: 0;
+}
+.hero-collage-bg img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+    opacity: 0.8; /* Slight fade so they blend */
 }
 
+/* The Dark Overlay (Sits on top of collage, below text) */
 .hero-overlay { 
-    background: rgba(42, 128, 166, 0.7); 
+    background: rgba(42, 128, 166, 0.85); /* Solid enough to read text */
     width: 100%; height: 100%; 
-    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    position: absolute; top: 0; left: 0;
+    z-index: 1; 
+}
+/* Container for text (Sits on top of overlay) */
+.hero-content, .page-header .container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 .hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); }
-.hero-content h1 { font-size: 3rem; }
 .page-header h1 { font-size: 2.5rem; }
 
 /* General Sections */
@@ -148,7 +171,6 @@ ul { list-style: none; }
 #houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; }
 #houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
-
 /* === MOBILE RESPONSIVENESS === */
 @media (max-width: 768px) {
     .hamburger { display: block; z-index: 1001;}
@@ -169,4 +191,7 @@ ul { list-style: none; }
     .merch-image { max-width: 100%; margin-bottom: 20px; }
     .footer-content { flex-direction: column; text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
+    
+    /* Ensure collage is visible on mobile */
+    .hero-collage-bg { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
 }
