@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Snowdrop United</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        .auth-container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .auth-container input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .toggle-link { color: #2a80a6; cursor: pointer; font-size: 0.9rem; margin-top: 15px; display: block; text-decoration: underline; }
+        .error-msg { color: red; font-size: 0.9rem; margin-bottom: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="images/logo-primary.png" alt="Snowdrop United Logo">
+                <span>Snowdrop United</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <h2 id="form-title">Login</h2>
+        <p class="error-msg" id="error-message"></p>
+        
+        <input type="email" id="email" placeholder="Email Address" required>
+        <input type="password" id="password" placeholder="Password" required>
+        
+        <button class="btn-primary" id="auth-btn" style="width: 100%;">Log In</button>
+        
+        <span class="toggle-link" id="toggle-auth">Don't have an account? Sign Up</span>
+    </div>
+
+    <script type="module">
+        import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './firebase-config.js';
+
+        const emailInput = document.getElementById('email');
+        const passInput = document.getElementById('password');
+        const authBtn = document.getElementById('auth-btn');
+        const toggleLink = document.getElementById('toggle-auth');
+        const title = document.getElementById('form-title');
+        const errorMsg = document.getElementById('error-message');
+
+        let isLogin = true;
+
+        toggleLink.addEventListener('click', () => {
+            isLogin = !isLogin;
+            if (isLogin) {
+                title.textContent = "Login";
+                authBtn.textContent = "Log In";
+                toggleLink.textContent = "Don't have an account? Sign Up";
+            } else {
+                title.textContent = "Create Account";
+                authBtn.textContent = "Sign Up";
+                toggleLink.textContent = "Already have an account? Log In";
+            }
+            errorMsg.style.display = 'none';
+        });
+
+        authBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passInput.value;
+
+            try {
+                if (isLogin) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                }
+                // Redirect to Secure Blog on success
+                window.location.href = "blog.html";
+            } catch (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

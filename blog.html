@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Blog | Snowdrop United</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        .chat-container { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; background: white;}
+        .chat-box { height: 400px; overflow-y: scroll; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px 15px; border-radius: 20px; max-width: 70%; font-size: 0.9rem; }
+        .my-message { align-self: flex-end; background: #2a80a6; color: white; }
+        .other-message { align-self: flex-start; background: #e0e0e0; color: #333; }
+        .message-input-area { display: flex; padding: 10px; background: white; }
+        .message-input-area input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 50px; margin-right: 10px; outline: none; }
+        .sender-name { font-size: 0.7rem; color: #777; margin-bottom: 2px; display: block; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="images/logo-primary.png" alt="Snowdrop United Logo">
+                <span>Snowdrop Blog</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><button id="logout-btn" class="btn-nav" style="border:none; cursor:pointer;">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Community Chat</h2>
+            <p class="section-subtitle">Connect with other Snowdrop members.</p>
+            
+            <div class="chat-container">
+                <div id="chat-box" class="chat-box">
+                    <div style="text-align: center; color: #999;">Loading secure chat...</div>
+                </div>
+                <div class="message-input-area">
+                    <input type="text" id="msg-input" placeholder="Type a message...">
+                    <button class="btn-primary" id="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="module">
+        import { auth, db, onAuthStateChanged, signOut, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from './firebase-config.js';
+
+        const chatBox = document.getElementById('chat-box');
+        const msgInput = document.getElementById('msg-input');
+        const sendBtn = document.getElementById('send-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        let currentUser = null;
+
+        // 1. SECURITY CHECK: Kick user out if not logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadMessages();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. LOGOUT FUNCTION
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+
+        // 3. SEND MESSAGE
+        sendBtn.addEventListener('click', async () => {
+            if (msgInput.value.trim() === "") return;
+            
+            try {
+                await addDoc(collection(db, "messages"), {
+                    text: msgInput.value,
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    createdAt: serverTimestamp()
+                });
+                msgInput.value = ""; // Clear input
+            } catch (e) {
+                console.error("Error sending message: ", e);
+            }
+        });
+
+        // 4. LOAD MESSAGES REAL-TIME
+        function loadMessages() {
+            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+            
+            onSnapshot(q, (snapshot) => {
+                chatBox.innerHTML = ""; // Clear current list
+                snapshot.forEach((doc) => {
+                    const msg = doc.data();
+                    const div = document.createElement("div");
+                    const isMe = msg.uid === currentUser.uid;
+                    
+                    div.className = `message ${isMe ? 'my-message' : 'other-message'}`;
+                    
+                    // Show email of sender if it's not me
+                    let content = "";
+                    if (!isMe) {
+                        content += `<span class='sender-name'>${msg.email.split('@')[0]}</span>`;
+                    }
+                    content += msg.text;
+                    
+                    div.innerHTML = content;
+                    chatBox.appendChild(div);
+                });
+                // Auto scroll to bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>
