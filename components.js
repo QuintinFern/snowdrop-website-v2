@@ -32,7 +32,7 @@ export function loadComponents() {
                 <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
             </li>
 
-            <li><a href="index.html#contact" class="${isContact ? 'active' : ''}">Contact</a></li>
+            <li><a href="#main-footer" class="${isContact ? 'active' : ''}">Contact</a></li>
             
             <li id="nav-auth-item">
                 <a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>
