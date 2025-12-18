@@ -7,13 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
-            // Toggle Nav
             navLinks.classList.toggle('nav-active');
-            
-            // Hamburger Animation
             hamburger.classList.toggle('toggle');
-
-            // Animate Links Fade In
             links.forEach((link, index) => {
                 if (link.style.animation) {
                     link.style.animation = '';
@@ -24,13 +19,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ================= IMAGE COUNTERS =================
+    // ================= IMAGE COUNTERS & TITLES =================
     const config = {
         mainEvents: 5,      
-        directors: 3,       
+        directors: 6,   // Updated to 6
         houstonHub: 5,      
         austinHub: 5        
     };
+
+    // Specific titles for the directors
+    const directorTitles = [
+        "President",
+        "Vice President",
+        "Treasurer",
+        "Secretary",
+        "Director",
+        "Director"
+    ];
 
     function loadImages(containerId, count, prefix, isSlider = false) {
         const container = document.getElementById(containerId);
@@ -38,24 +43,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 1; i <= count; i++) {
             const wrapper = document.createElement('div');
-            wrapper.className = isSlider ? 'slide' : 'grid-item';
+            wrapper.className = isSlider ? 'slide' : 'director-card'; // Default class
 
             const img = document.createElement('img');
             img.src = `images/${prefix}-${i}.jpg`; 
             img.alt = `${prefix.replace(/-/g, ' ')} ${i}`;
             
+            // Error handling: Hide if image missing
             img.onerror = function() { 
                 if(isSlider) this.parentElement.style.display = 'none'; 
-                else this.style.display = 'none';
+                else this.src = 'images/logo-primary.png'; // Fallback for directors if photo missing
             };
 
             wrapper.appendChild(img);
+
+            // Special Logic for Directors
             if (prefix === 'director') {
+                // 1. Add Name Placeholder
                 const name = document.createElement('h3');
-                name.textContent = `Director ${i}`;
+                name.textContent = "Board Member"; // You can change this to real names later
+                
+                // 2. Add Title (from the list above)
+                const title = document.createElement('p');
+                title.textContent = directorTitles[i-1]; 
+                title.style.color = "#2a80a6";
+                title.style.fontWeight = "bold";
+
                 wrapper.appendChild(name);
-                wrapper.className = 'director-card';
+                wrapper.appendChild(title);
+            } else {
+                // For regular grids (if you add any later)
+                if(!isSlider) wrapper.className = 'grid-item';
             }
+
             container.appendChild(wrapper);
         }
     }
@@ -109,13 +129,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000);
     });
 });
-
-// CSS Animation for Links (Injecting style here for simplicity)
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-@keyframes navLinkFade {
-    from { opacity: 0; transform: translateX(50px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-`;
-document.head.appendChild(styleSheet);
