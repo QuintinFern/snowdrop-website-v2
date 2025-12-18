@@ -6,7 +6,7 @@ import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTim
 // --- YOUR CONFIGURATION ---
 // Go to Firebase Console > Project Settings > General > Your Apps to find these values
 const firebaseConfig = {
-  apiKey: AIzaSyBzwB9rLvP7hdeUitznATJZTP8W_3J62Go",
+  apiKey: "AIzaSyBzwB9rLvP7hdeUitznATJZTP8W_3J62Go",
   authDomain: "snowdrop-united-social-website.firebaseapp.com",
   projectId: "snowdrop-united-social-website",
   storageBucket: "snowdrop-united-social-website.firebasestorage.app",
