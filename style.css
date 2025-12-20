@@ -60,6 +60,18 @@ img { max-width: 100%; display: block; }
 .hero-home { min-height: 48vh; } /*changed from 60 last*/
 .page-header { min-height: 50vh; padding: 60px 0; }
 
+.hero-title {
+  line-height: 1.05;
+}
+
+.hero-subtitle {
+  display: block;        /* forces new line */
+  margin-top: 12px;
+  font-size: 0.55em;     /* smaller than main title */
+  font-weight: 600;
+  opacity: 0.95;
+}
+
 /* stats section on homepage*/
 
 .stats { padding: 40px 16px; }
