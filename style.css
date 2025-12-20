@@ -57,8 +57,20 @@ img { max-width: 100%; display: block; }
     overflow: hidden; 
     background: #2a80a6; 
 }
-.hero-home { min-height: 60vh; }
+.hero-home { min-height: 48vh; } /*changed from 60 last*/
 .page-header { min-height: 50vh; padding: 60px 0; }
+
+.hero-title {
+  line-height: 1.05;
+}
+
+.hero-subtitle {
+  display: block;        /* forces new line */
+  margin-top: 12px;
+  font-size: 0.55em;     /* smaller than main title */
+  font-weight: 600;
+  opacity: 0.95;
+}
 
 /* stats section on homepage*/
 
