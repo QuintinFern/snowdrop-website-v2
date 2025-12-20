@@ -57,7 +57,7 @@ img { max-width: 100%; display: block; }
     overflow: hidden; 
     background: #2a80a6; 
 }
-.hero-home { min-height: 60vh; }
+.hero-home { min-height: 48vh; } /*changed from 60 last*/
 .page-header { min-height: 50vh; padding: 60px 0; }
 
 /* stats section on homepage*/
