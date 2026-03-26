@@ -275,7 +275,10 @@ img { max-width: 100%; display: block; }
     .dropdown:hover .dropdown-content { display: none; } /* Disable standard hover reveal on mobile */
     .dropdown:hover .show-mobile-dropdown { display: block; }
 }
+<<<<<<< HEAD
 
 @media (max-width: 500px) { 
     .stats-grid { grid-template-columns: 1fr; } 
 }
+=======
+>>>>>>> parent of a39c51c (3262026 Update)

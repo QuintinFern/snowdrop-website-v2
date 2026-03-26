@@ -6,48 +6,82 @@
     <title>Hope Events | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <script type="module">
         import { loadComponents } from './components.js';
         document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 </head>
 <body>
+
     <nav class="navbar" id="main-navbar"></nav>
 
     <section class="page-header">
         <div class="container">
             <h1>Hope Events</h1>
             <p style="margin-bottom: 40px;">Bringing compassion and necessities to those who need it most.</p>
+
+            <div class="slider-container">
+                <button class="slider-btn prev-btn">&#10094;</button>
+                <div class="slider-track" id="hope-header-slider">
+                    </div>
+                <button class="slider-btn next-btn">&#10095;</button>
+            </div>
         </div>
     </section>
 
-    <section class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Recent Events</h2>
-            <div class="slider-container">
-                <button class="slider-btn prev-btn">&#10094;</button>
-                <div class="slider-track" id="hope-header-slider"></div>
-                <button class="slider-btn next-btn">&#10095;</button>
+    <section class="section" id="mission">
+        <div class="container content-wrapper">
+            <div class="text-content">
+                <h2>Our Mission</h2>
+                <p>Snowdrop United provides the essentials to individuals in need. Our meal packages, clothing hand-outs, and hygiene packs go directly to the Houston area homeless population—no middle man at any point.</p>
+                <p>From warm blankets for cold winter nights and icy water bottles for sweltering summer heat, Snowdrop is determined to help. We aspire to lift individuals out of poverty and seek to facilitate stable and safe environments for low income and homeless populations across Houston and beyond.</p>
+                <p>As we expand, we plan to host educational seminars dedicated to giving everyone a strong foundation for a successful life.</p>
             </div>
-            <p style="text-align: center; max-width: 800px; margin: 20px auto;">
-                Our latest distributions brought together amazing volunteers to hand out supplies and connect with our community.
-            </p>
+            <div class="image-content">
+                <img src="images/event-photo-1.jpg" alt="Volunteers helping community" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background-color: #f4f4f4;">
+        <div class="container">
+            <h2 class="section-title">The Essentials</h2>
+            <div class="hub-grid">
+                
+                <div class="hub-card">
+                    <img src="images/what-we-serve.jpg" alt="Food Distribution" class="hub-card-img-top">
+                    <div class="hub-card-body" style="text-align: left;">
+                        <h3>What We Serve</h3>
+                        <p>Snowdrop United is committed to providing nutritious meals at a low cost, so that we can maximize our donors' impact. We traditionally hand out ham and cheese sandwiches or fried rice meals.</p>
+                        <p>All of our meal packs come clearly labelled with bottled water and a few extra snacks like oranges or cereal.</p>
+                    </div>
+                </div>
+
+                <div class="hub-card">
+                    <img src="images/clothing-and-hygiene.jpg" alt="Clothing and Hygiene" class="hub-card-img-top">
+                    <div class="hub-card-body" style="text-align: left;">
+                        <h3>Clothing & Hygiene</h3>
+                        <p>Making change requires more than just a quick meal. Snowdrop United is proud to provide lightly used clothing along with blankets and hygiene products. We've given out everything from deodorant to toothbrushes to period products.</p>
+                        <p>We've successfully given out over <strong>4 full carloads</strong> of goods and are proud to have partnered with <strong>Security Gate</strong> and the <strong>George Ranch High School Student Council</strong> for amazing donations from the Houston community.</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
 
     <section class="section">
-        <div class="container">
-            <h2 class="section-title">The Essentials</h2>
-            <div class="content-wrapper" style="flex-direction: row; gap: 40px; justify-content: center; align-items: center;">
-                <div class="text-content" style="max-width: 800px; text-align: center;">
-                    <p>Creating lasting change requires more than just a quick meal. Snowdrop United is proud to provide lightly used clothing alongside vital blankets and hygiene products. We provide everything from deodorant to toothbrushes and period products to ensure basic human needs are met.</p>
-                    <p>Thanks to our partners at <strong>Security Gate</strong> and the <strong>George Ranch High School Student Council</strong>, we have successfully distributed large quantities of essential goods to the local community.</p>
-                </div>
-            </div>
+        <div class="container" style="text-align: center; max-width: 800px;">
+            <h2 class="section-title">How We Started</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                From humble beginnings, we have grown to provide far more than meals, but we will never forget how we started. We made lifelong memories while working out of our kitchens and forged new friendships while handing out meals for the first time. We may no longer erratically swerve through Houston to find people in need, but we are proud to have expanded our reach and strive to keep making a positive impact in our community. We wish to welcome anyone to join us!
+            </p>
         </div>
     </section>
 
     <footer class="footer" id="main-footer"></footer>
+    
     <script src="app.js"></script>
 </body>
 </html>
