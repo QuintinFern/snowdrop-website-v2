@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
 
 export function loadComponents() {
@@ -9,6 +10,8 @@ export function loadComponents() {
     const isDonate = path === 'donate.html';
     const isCareers = path === 'careers.html';
 =======
+=======
+>>>>>>> parent of a39c51c (3262026 Update)
 // components.js
 import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
 
@@ -19,6 +22,9 @@ export function loadComponents() {
     const isAbout = path.includes("about-us.html");
     const isCareers = path.includes("careers.html");
     const isContact = path.includes("#contact");
+<<<<<<< HEAD
+>>>>>>> parent of a39c51c (3262026 Update)
+=======
 >>>>>>> parent of a39c51c (3262026 Update)
 
     const navbarHTML = `
@@ -40,6 +46,7 @@ export function loadComponents() {
             <li><a href="about-us.html" class="${isAbout ? 'active' : ''}">About Us</a></li>
             
 <<<<<<< HEAD
+<<<<<<< HEAD
             <li class="dropdown" id="hubs-dropdown">
                 <a href="#" class="dropbtn">Our Hubs ▾</a>
                 <div class="dropdown-content">
@@ -56,6 +63,12 @@ export function loadComponents() {
                 <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
             </li>
 
+=======
+            <li id="nav-careers" style="display: none;">
+                <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
+            </li>
+
+>>>>>>> parent of a39c51c (3262026 Update)
             <li><a href="#main-footer" class="${isContact ? 'active' : ''}">Contact</a></li>
             
             <li id="nav-auth-item">
@@ -63,11 +76,15 @@ export function loadComponents() {
             </li>
             
             <li><a href="https://square.link/u/DPaykecu" class="btn-nav">Donate</a></li>
+<<<<<<< HEAD
+>>>>>>> parent of a39c51c (3262026 Update)
+=======
 >>>>>>> parent of a39c51c (3262026 Update)
         </ul>
     </div>
     `;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     const footerHTML = `
     <div class="container">
@@ -87,6 +104,8 @@ export function loadComponents() {
 
     // --- MOBILE MENU LOGIC ---
 =======
+=======
+>>>>>>> parent of a39c51c (3262026 Update)
     // --- FOOTER HTML ---
     const footerHTML = `
     <div class="container footer-content">
@@ -126,6 +145,9 @@ export function loadComponents() {
 }
 
 function initMobileMenu() {
+<<<<<<< HEAD
+>>>>>>> parent of a39c51c (3262026 Update)
+=======
 >>>>>>> parent of a39c51c (3262026 Update)
     const hamburger = document.getElementById('mobile-menu-btn');
     const navLinks = document.getElementById('nav-links');
@@ -136,6 +158,7 @@ function initMobileMenu() {
             hamburger.classList.toggle('toggle');
         });
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     // --- MOBILE DROPDOWN FIX ---
@@ -154,11 +177,17 @@ function initMobileMenu() {
 
 function handleAuthStatus() {
 >>>>>>> parent of a39c51c (3262026 Update)
+=======
+}
+
+function handleAuthStatus() {
+>>>>>>> parent of a39c51c (3262026 Update)
     onAuthStateChanged(auth, (user) => {
         const careersLink = document.getElementById('nav-careers');
         const authItem = document.getElementById('nav-auth-item');
 
         if (user) {
+<<<<<<< HEAD
 <<<<<<< HEAD
             if (careersLink) careersLink.style.display = 'block';
             if (authItem) {
@@ -172,6 +201,8 @@ function handleAuthStatus() {
             if (authItem) {
                 authItem.innerHTML = `<a href="login.html">Login</a>`;
 =======
+=======
+>>>>>>> parent of a39c51c (3262026 Update)
             // --- USER IS LOGGED IN ---
             
             // 1. Show Careers Link
@@ -198,6 +229,9 @@ function handleAuthStatus() {
             // 2. Ensure "Login" is shown
             if (authItem) {
                 authItem.innerHTML = `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>`;
+<<<<<<< HEAD
+>>>>>>> parent of a39c51c (3262026 Update)
+=======
 >>>>>>> parent of a39c51c (3262026 Update)
             }
         }
