@@ -6,52 +6,61 @@
     <title>About Us | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-    
     <script type="module">
         import { loadComponents } from './components.js';
         document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 </head>
 <body>
-
     <nav class="navbar" id="main-navbar"></nav>
 
     <section class="page-header">
         <div class="container">
             <h1>About Us</h1>
             <p style="max-width: 800px; margin: 0 auto 40px auto; line-height: 1.8;">
-                From humble beginnings, we have grown to provide far more than meals, but we will never forget where we started. We made lifelong memories working out of our kitchens and built new friendships while serving our community for the first time. Over the years, we have expanded our reach, strengthened our programs, and continued to find new ways to make a positive impact. We are proud of what we’ve accomplished and warmly welcome anyone who wants to join us in this journey.
+                From humble beginnings, we have grown to provide far more than meals, but we will never forget where we started. Over the years, we have expanded our reach, strengthened our programs, and continued to find new ways to make a positive impact. 
             </p>
-
             <div class="slider-container">
                 <button class="slider-btn prev-btn">&#10094;</button>
-                <div class="slider-track" id="about-header-slider">
-                    </div>
+                <div class="slider-track" id="about-header-slider"></div>
                 <button class="slider-btn next-btn">&#10095;</button>
             </div>
         </div>
     </section>
 
-
     <section class="section">
         <div class="container">
-            <h2 class="section-title">Board of Directors</h2>
+            <h2 class="section-title">Executive Board</h2>
             <div class="directors-grid" id="directors-grid">
                 </div>
         </div>
     </section>
 
-<section class="section">
-    <div class="container">
-        <h2 class="section-title">Houston Hub</h2>
-        <div class="directors-grid" id="houston-hub-grid">
-            <!-- JS will inject the 8 Houston Hub members here -->
+    <section class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">Houston Hub</h2>
+            <div class="directors-grid" id="houston-hub-grid">
+                 </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Austin Hub</h2>
+            <div class="directors-grid" id="austin-hub-grid">
+                </div>
+        </div>
+    </section>
+
+    <section class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">Our Volunteers</h2>
+            <div class="directors-grid" id="volunteers-grid">
+                </div>
+        </div>
+    </section>
 
     <footer class="footer" id="main-footer"></footer>
-
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate | Snowdrop United</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="module">
+        import { loadComponents } from './components.js';
+        document.addEventListener('DOMContentLoaded', loadComponents);
+    </script>
+</head>
+<body>
+    <nav class="navbar" id="main-navbar"></nav>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Support Our Mission</h1>
+            <p>Your contribution directly provides essentials to the homeless population.</p>
+        </div>
+    </section>
+
+    <section class="section" style="text-align: center;">
+        <div class="container" style="max-width: 600px;">
+            <h2>Make an Impact Today</h2>
+            <p style="margin-bottom: 30px;">100% of your donation bypasses middle men and goes directly to purchasing food, blankets, and hygiene products for individuals in need.</p>
+            
+            <a href="#" target="_blank" class="btn-primary" style="font-size: 1.2rem; padding: 15px 40px;">Donate via Square</a>
+        </div>
+    </section>
+
+    <section class="section bg-light">
+        <div class="container text-center">
+            <h2 class="section-title">Where Your Donations Go</h2>
+            <div class="content-wrapper" style="flex-direction: row; justify-content: center; gap: 20px;">
+                <div class="stat-box" style="background: white; padding: 20px; border-radius: 8px;">
+                    <h3>Meals</h3>
+                    <p>Hot food and non-perishables.</p>
+                </div>
+                <div class="stat-box" style="background: white; padding: 20px; border-radius: 8px;">
+                    <h3>Hygiene</h3>
+                    <p>Toothbrushes, deodorant, feminine care.</p>
+                </div>
+                <div class="stat-box" style="background: white; padding: 20px; border-radius: 8px;">
+                    <h3>Comfort</h3>
+                    <p>Blankets and seasonal clothing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="main-footer"></footer>
+    <script src="app.js"></script>
+</body>
+</html>

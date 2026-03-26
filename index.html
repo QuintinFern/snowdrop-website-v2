@@ -6,14 +6,12 @@
     <title>Home | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-    
     <script type="module">
         import { loadComponents } from './components.js';
         document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 </head>
 <body>
-
     <nav class="navbar" id="main-navbar"></nav>
 
     <header class="hero-home">
@@ -23,51 +21,25 @@
             <img src="images/collage-home-3.jpg" alt="Collage 3">
             <img src="images/collage-home-4.jpg" alt="Collage 4">
         </div>
-
         <div class="hero-overlay">
             <div class="hero-content">
                 <div class="container">
-                    <h1 class="hero-title">
-                      Snowdrop United
-                      <span class="hero-subtitle">Spreading Hope</span>
-                    </h1>
-                    <p>A student-led organization that provides meals, hygiene products, and other essentials to the homeless. </p>
-                    <a href="hope-events.html#mission" class="btn btn-primary">Our Mission</a>
+                    <h1>Snowdrop United</h1>
+                    <p>Providing the essentials directly to those in need.</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <!--kishen edits pls delete if something breaks-->
-    <section class="stats">
-      <div class="stats-grid">
-        <article class="stat-card">
-          <div class="stat-icon" aria-hidden="true">♥</div>
-          <div class="stat-number">3,000+</div>
-          <div class="stat-label">Meals Served</div>
-        </article>
-
-        <article class="stat-card">
-          <div class="stat-icon" aria-hidden="true">👥</div>
-          <div class="stat-number">50+</div>
-          <div class="stat-label">Volunteers</div>
-        </article>
-
-        <article class="stat-card">
-          <div class="stat-icon" aria-hidden="true">✨</div>
-          <div class="stat-number">25+</div>
-          <div class="stat-label">Hope Events</div>
-        </article>
-
-        <article class="stat-card">
-          <div class="stat-icon" aria-hidden="true">↗</div>
-          <div class="stat-number">500+</div>
-          <div class="stat-label">Hygiene Packs</div>
-        </article>
-      </div>
+    <section class="section stats-section">
+        <div class="container stats-scroll-container">
+            <div class="stat-box"><h3>500+</h3><p>Meals Served</p></div>
+            <div class="stat-box"><h3>1000+</h3><p>Hygiene Kits</p></div>
+            <div class="stat-box"><h3>250+</h3><p>Blankets</p></div>
+            <div class="stat-box"><h3>50+</h3><p>Volunteers</p></div>
+        </div>
     </section>
-<!--end of kishen edits to delete if something breaks lol-->
-    
+
     <section id="events" class="section events-section-tight">
         <div class="container">
             <h2 class="section-title">Recent Moments</h2>
@@ -79,6 +51,15 @@
         </div>
     </section>
 
+    <section class="section">
+        <div class="container" style="text-align: center; max-width: 800px;">
+            <h2 class="section-title">Our Mission</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                Snowdrop United provides the essentials to individuals in need. Our meal packages, clothing hand-outs, and hygiene packs go directly to the Houston area homeless population—no middle man at any point. From warm blankets for cold winter nights to icy water bottles for sweltering summer heat, we are determined to help lift individuals out of poverty and facilitate stable environments. As we expand, we plan to host educational seminars dedicated to giving everyone a strong foundation for a successful life.
+            </p>
+        </div>
+    </section>
+
     <section class="section merch-section">
         <div class="container merch-container">
             <div class="merch-image">
@@ -87,14 +68,13 @@
             <div class="merch-text">
                 <h3>Buy Our Merch!</h3>
                 <h4>T-Shirt and Sweater Campaign</h4>
-                <p>Visit our Bonfire campaign to purchase official Snowdrop United T-Shirts and Hoodies. Proudly represent our cause and make an order today. Proceeds will go to feeding the homeless. Thank you for your support!</p>
+                <p>Visit our Bonfire campaign to purchase official Snowdrop United T-Shirts and Hoodies. Proudly represent our cause and make an order today. Proceeds will go directly to feeding the homeless. Thank you for your support!</p>
                 <a href="http://bonfire.com/snowdropunited-classic/" target="_blank" class="btn-shop">Buy Today</a>
             </div>
         </div>
     </section>
 
     <footer class="footer" id="main-footer"></footer>
-    
     <script src="app.js"></script>
 </body>
 </html>
