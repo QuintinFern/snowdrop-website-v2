@@ -1,6 +1,3 @@
-/* =========================================
-   GLOBALS & BASE TYPOGRAPHY
-========================================= */
 :root {
     --primary-color: #2a80a6;
     --primary-dark: #1f607d;
@@ -11,99 +8,45 @@
     --font-body: 'Poppins', sans-serif;
 }
 
-body { 
-    font-family: var(--font-body); 
-    margin: 0; 
-    padding: 0; 
-    color: var(--text-color); 
-    line-height: 1.6; 
-    overflow-x: hidden;
-}
-
+body { font-family: var(--font-body); margin: 0; padding: 0; color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
 a { text-decoration: none; }
 ul { list-style: none; padding: 0; margin: 0; }
 img { max-width: 100%; display: block; }
 
-.bg-light { background-color: var(--bg-light); }
-
-/* =========================================
-   NAVIGATION (DESKTOP)
-========================================= */
+/* --- NAVIGATION --- */
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-.navbar { 
-    background: var(--white); 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-    padding: 10px 0; 
-    position: sticky; 
-    top: 0; 
-    z-index: 1000; /* Ensure navbar stays stacked above all page content */
-}
+.navbar { background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 10px 0; position: sticky; top: 0; z-index: 1000; }
 .nav-container { display: flex; justify-content: space-between; align-items: center; }
-
 .logo { display: flex; align-items: center; color: var(--primary-color); font-weight: bold; font-size: 1.2rem;}
 .logo img { height: 50px; margin-right: 10px; }
 
+/* Desktop Nav Links */
 .nav-links { display: flex; gap: 20px; }
 .nav-links a { color: var(--text-color); font-weight: 500; transition: color 0.3s;}
 .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
-
-/* Nav Dropdown Menu */
-.dropdown { position: relative; display: inline-block; }
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #ffffff;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 2000;
-    border-radius: 5px;
-    overflow: hidden;
-}
-.dropdown-content a {
-    color: #333;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9rem;
-}
-.dropdown-content a:hover { background-color: #f1f1f1; color: var(--primary-color); }
-.dropdown:hover .dropdown-content { display: block; }
-
-/* =========================================
-   BUTTONS
-========================================= */
 .btn-nav { background: var(--primary-color); color: white !important; padding: 8px 15px; border-radius: 4px; }
 .btn-nav:hover { background: var(--primary-dark); }
 
-.btn-primary { 
-    background: var(--primary-color); 
-    color: white; 
-    padding: 10px 25px; 
-    border-radius: 5px; 
-    font-weight: 600; 
-    display: inline-block; 
-    margin-top: 15px; 
-    border: 1px solid white; 
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.btn-primary:hover { background: white; color: var(--primary-color); border: 1px solid var(--primary-color); }
+/* Hamburger Menu */
+.hamburger { display: none; cursor: pointer; }
+.bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: var(--text-color); }
+.hamburger.toggle .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+.hamburger.toggle .bar:nth-child(2) { opacity: 0; }
+.hamburger.toggle .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
 
+/* Buttons */
+.btn-primary { background: var(--primary-color); color: white; padding: 10px 25px; border-radius: 5px; font-weight: 600; display: inline-block; margin-top: 15px; border: 1px solid white; cursor: pointer;}
+.btn-primary:hover { background: white; color: var(--primary-color); border: 1px solid var(--primary-color); }
 .btn-secondary { border: 1px solid white; color: white; padding: 10px 20px; border-radius: 5px; font-weight: 500;}
 .btn-secondary:hover { background: white; color: var(--primary-color); }
-
 .btn-email { background: white; color: var(--primary-color) !important; padding: 10px 20px; border-radius: 5px; font-weight: bold; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: transform 0.2s;}
 .btn-email:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
-
 .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); padding: 8px 20px; border-radius: 4px; font-weight: 600; display: inline-block; }
 .btn-outline:hover { background: var(--primary-color); color: white; }
-
 .btn-shop { background: #2a80a6; color: white; padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(42, 128, 166, 0.4); transition: transform 0.2s; display: inline-block;}
 .btn-shop:hover { transform: scale(1.05); background: #1f607d; }
 
-/* =========================================
-   HERO, HEADERS & ALIGNMENT
-========================================= */
+/* --- HERO & SLIDERS --- */
 .hero-home, .page-header { 
     position: relative;
     display: flex; 
@@ -112,149 +55,195 @@ img { max-width: 100%; display: block; }
     text-align: center; 
     color: white; 
     overflow: hidden; 
-    background: var(--primary-color); 
+    background: #2a80a6; 
 }
-.hero-home { min-height: 48vh; } 
+.hero-home { min-height: 48vh; } /*changed from 60 last*/
 .page-header { min-height: 50vh; padding: 60px 0; }
 
-.hero-title { line-height: 1.05; }
-.hero-subtitle { display: block; margin-top: 12px; font-size: 0.55em; font-weight: 600; opacity: 0.95; }
+.hero-title {
+  line-height: 1.05;
+}
 
-.section-title { font-size: 2rem; margin-bottom: 30px;}
-.content-wrapper { display: flex; flex-direction: column; gap: 30px; } 
+.hero-subtitle {
+  display: block;        /* forces new line */
+  margin-top: 12px;
+  font-size: 0.55em;     /* smaller than main title */
+  font-weight: 600;
+  opacity: 0.95;
+}
 
-/* =========================================
-   STATS SMOOTH SCROLLING (HOMEPAGE)
-========================================= */
+/* stats section on homepage*/
+
 .stats { padding: 40px 16px; }
 
-.stats-scroll-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    gap: 20px;
-    padding-bottom: 15px;
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-}
-.stats-scroll-container::-webkit-scrollbar { display: none; }
-
-.stat-box, .stat-card {
-    flex: 0 0 auto;
-    min-width: 200px;
-    text-align: center;
-    background: #fff;
-    padding: 28px 22px;
-    border: 1px solid #eef1f6;
-    border-radius: 18px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.06);
-}
-.stat-box h3, .stat-number { color: var(--primary-color); font-size: 2.5rem; font-weight: 800; margin: 0; line-height: 1.05;}
-.stat-icon { font-size: 34px; margin-bottom: 10px; }
-.stat-label, .stat-box p { margin-top: 8px; font-size: 16px; color: #6b7280; font-weight: 600; }
-
-/* =========================================
-   DIRECTOR & VOLUNTEER GRIDS
-========================================= */
-.directors-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
-}
-.director-card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-.director-card img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 15px auto;
+.stats-grid{
+  max-width:1100px; margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:22px;
 }
 
-/* =========================================
-   CAROUSEL SLIDERS
-========================================= */
-.slider-container {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    border-radius: 10px;
-    z-index: 1; /* Keep below navbar */
-}
-.slider-track {
-    display: flex;
-    width: 100%;
-}
-.slide {
-    min-width: 100%;
-    box-sizing: border-box;
-}
-.slide img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    aspect-ratio: 16/9; /* Keeps images beautifully uniform */
-}
-.slider-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    padding: 15px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    z-index: 10;
-}
-.prev-btn { left: 0; }
-.next-btn { right: 0; }
-
-/* =========================================
-   MOBILE RESPONSIVENESS & HAMBURGER
-========================================= */
-.hamburger { display: none; cursor: pointer; }
-.bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: var(--text-color); }
-
-@media (max-width: 900px) { 
-    .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } 
+.stat-card{
+  background:#fff;
+  border:1px solid #eef1f6;
+  border-radius:18px;
+  padding:28px 22px;
+  box-shadow:0 10px 24px rgba(0,0,0,0.06);
+  text-align:center;
 }
 
+.stat-icon{ font-size:34px; margin-bottom:10px; }
+
+.stat-number{
+  font-size:44px; font-weight:800;
+  color:#0f172a; line-height:1.05;
+}
+
+.stat-label{ margin-top:8px; font-size:16px; color:#6b7280; }
+
+@media (max-width:900px){
+  .stats-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:480px){
+  .stats-grid{ grid-template-columns:1fr; }
+}
+
+/* Background Slider Logic */
+.header-bg-slider {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+}
+.header-bg-slider .slide img { height: 100%; width: 100%; object-fit: cover; }
+
+/* Existing Home Collage */
+.hero-collage-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;    
+    z-index: 0;
+}
+.hero-collage-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+
+.hero-overlay { 
+    background: rgba(42, 128, 166, 0.85); 
+    width: 100%; height: 100%; 
+    position: absolute; top: 0; left: 0;
+    z-index: 1; 
+}
+.hero-content, .page-header .container {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;
+}
+.hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); line-height: 1.2; }
+.hero-content p, .page-header p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+
+/* --- GENERAL SECTIONS --- */
+.section { padding: 60px 0; }
+.section-title { text-align: center; color: var(--primary-color); margin-bottom: 40px; font-size: 2.5rem; font-family: var(--font-heading); }
+.section-subtitle { text-align: center; color: #666; margin-bottom: 30px; margin-top: -30px; }
+.events-section-tight { padding-top: 20px !important; padding-bottom: 60px; }
+
+/* Merch Section */
+.merch-section { background-color: #e9f5fa; }
+.merch-container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: row; align-items: center; gap: 50px; }
+.merch-image { flex: 1; max-width: 50%; }
+.merch-image img { width: 100%; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid white; }
+.merch-text { flex: 1; }
+.merch-text h3 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; font-family: var(--font-heading); }
+
+/* Content Wrapper */
+.content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+.text-content h2 { color: var(--primary-color); margin-bottom: 20px; }
+.image-content { width: 100%; }
+.image-content img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+/* Hub Cards */
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+.hub-card { 
+    background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    text-align: center; transition: transform 0.3s; border: 1px solid #eee; display: flex; flex-direction: column;
+}
+.hub-card:hover { transform: translateY(-5px); }
+.hub-card-img-top { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #eee; }
+.hub-card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.hub-card h3 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 15px; }
+
+/* Specific Hub Card Backgrounds (for Hub Selection Page) */
+#houston-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/houston-hub-background.jpg') center/cover; color: white; }
+#austin-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/austin-hub-background.jpg') center/cover; color: white; }
+#new-hub-card { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/new-hub-background.jpg') center/cover; color: white; }
+#houston-card h3, #austin-card h3, #new-hub-card h3 { color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+#houston-card p, #austin-card p, #new-hub-card p { color: white; font-weight: 500; margin-bottom: 20px; }
+#houston-card .btn-outline, #austin-card .btn-outline, #new-hub-card .btn-outline { border-color: white; color: white; margin-top: auto;}
+#houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
+
+/* Sliders */
+.slider-container { position: relative; max-width: 800px; margin: 0 auto; overflow: hidden; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.header-bg-slider { border-radius: 0; box-shadow: none; max-width: 100%; } /* Remove shadow for background slider */
+.slider-track { display: flex; transition: transform 0.5s ease-in-out; width: 100%; }
+.slide { min-width: 100%; }
+.slide img { width: 100%; height: 400px; object-fit: cover; display: block; }
+.slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 24px; z-index: 10; }
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+/* --- DIRECTORS FIX --- */
+.directors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
+.director-card { text-align: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+.director-card img { 
+    width: 150px; 
+    height: 150px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin: 0 auto 15px auto; /* FIXED: Centered the image */
+    border: 3px solid var(--primary-color); 
+    display: block; 
+}
+
+/* Footer */
+.footer { background: var(--primary-color); color: white; padding: 40px 0 20px; margin-top: 50px; }
+.footer-content { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 20px;}
+.footer-info h3 { margin-bottom: 10px; }
+.ein-text { margin-top: 15px; font-size: 0.9rem; opacity: 0.9; background: rgba(0,0,0,0.1); padding: 5px 10px; border-radius: 4px; display: inline-block; }
+.footer-links { display: flex; gap: 15px; flex-wrap: wrap; }
+.footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; font-size: 0.9rem; width: 100%; }
+.social-icons { margin-top: 15px; display: flex; gap: 15px; }
+.social-icon { color: white; transition: opacity 0.3s; display: inline-block;}
+.social-icon img { width: 48px; height: 48px; } 
+.social-icon:hover { opacity: 0.8; }
+
+/* Careers & Modal */
+.job-form-container { background: #f9f9f9; padding: 30px; border-radius: 10px; border: 1px solid #ddd; margin-top: 40px; max-width: 700px; margin-left: auto; margin-right: auto; }
+.form-group { margin-bottom: 20px; text-align: left; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 5px; color: var(--primary-color); }
+.form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; box-sizing: border-box;}
+.job-list-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.job-card { background: white; border: 1px solid #eee; border-left: 5px solid var(--primary-color); padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s; }
+.job-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+.job-card h3 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.5rem; }
+.job-meta { font-size: 0.9rem; color: #777; margin-bottom: 15px; font-weight: bold; }
+.job-card p { margin-bottom: 20px; }
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+.modal-content { background-color: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative; animation: fadeIn 0.3s; }
+.close-modal { position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer; color: #aaa; }
+.close-modal:hover { color: black; }
+@keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+
+
+/* ========================================= */
+/* === MOBILE RESPONSIVENESS FIXES (CLEANED UP) === */
+/* ========================================= */
 @media (max-width: 768px) {
-    /* 1. Typography Overrides */
-    .hero-content h1, .page-header h1 { font-size: 2rem; padding: 0 10px; line-height: 1.3; }
-    .hero-content p, .page-header p { font-size: 1rem; padding: 0 15px; margin-top: 15px;}
-
-    /* 2. Hamburger Icon Animation Fix */
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        z-index: 10000; /* Ensure it stays above the sliding menu */
-    }
-    .toggle .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .toggle .bar:nth-child(2) { opacity: 0; }
-    .toggle .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* 3. Mobile Navigation Menu Behavior */
+    
+    /* 1. TIGHTER SPACING FOR CLEANER LOOK */
+    .section { padding: 40px 0; } /* Reduced from 60px */
+    .page-header { min-height: 35vh; padding: 40px 0; } /* Reduced height so it doesn't take full screen */
+    .hero-home { min-height: 50vh; }
+    
+    /* 2. NAVIGATION */
+    .hamburger { display: block; z-index: 10000; position: relative;} 
     .nav-links {
-        position: fixed;
-        right: 0px;
-        top: 0px;
-        height: 100vh;
-        background-color: var(--white);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 70%;
-        transform: translateX(100%);
-        transition: transform 0.4s ease-in-out;
+        position: fixed; right: 0px; top: 0px; height: 100vh;
+        background-color: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 70%; transform: translateX(100%); transition: transform 0.4s ease-in-out;
         box-shadow: -2px 5px 10px rgba(0,0,0,0.2); 
         z-index: 9999;
     }
@@ -262,26 +251,24 @@ img { max-width: 100%; display: block; }
     .nav-links li { opacity: 1; margin: 20px 0; }
     .nav-links a { color: #333; font-size: 1.2rem; }
 
-    /* 4. Dropdown Mobile Touch Fix */
-    .dropdown-content {
-        position: relative; /* Un-float it for mobile */
-        display: none;
-        background-color: #f9f9f9;
-        box-shadow: none; 
-        text-align: center;
-        margin-top: 10px;
-    }
-    .show-mobile-dropdown { display: block !important; }
-    .dropdown:hover .dropdown-content { display: none; } /* Disable standard hover reveal on mobile */
-    .dropdown:hover .show-mobile-dropdown { display: block; }
-}
-<<<<<<< HEAD
-<<<<<<< HEAD
+    /* 3. TYPOGRAPHY SCALING */
+    .hero-content h1, .page-header h1 { font-size: 2rem; padding: 0 10px; line-height: 1.3; }
+    .hero-content p, .page-header p { font-size: 1rem; padding: 0 15px; margin-top: 15px;}
+    .section-title { font-size: 2rem; margin-bottom: 30px;}
 
-@media (max-width: 500px) { 
-    .stats-grid { grid-template-columns: 1fr; } 
+    /* 4. CONTENT STACKING */
+    .content-wrapper { display: flex; flex-direction: column; gap: 30px; } /* Stack text and images */
+    .merch-container { flex-direction: column; text-align: center; gap: 30px;}
+    .merch-image { max-width: 100%; }
+    
+    /* 5. FOOTER ALIGNMENT */
+    .footer-content { flex-direction: column; text-align: center; align-items: center; gap: 30px;}
+    .social-icons { justify-content: center; }
+    
+    /* 6. COLLAGE & GRID FIXES */
+    .hero-home .hero-collage-bg { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: repeat(4, 1fr); 
+    }
+    .hub-grid { grid-template-columns: 1fr; } /* Force 1 column on mobile */
 }
-=======
->>>>>>> parent of a39c51c (3262026 Update)
-=======
->>>>>>> parent of a39c51c (3262026 Update)

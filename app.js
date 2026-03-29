@@ -147,16 +147,11 @@ sliders.forEach(slider => {
 
     // When transition ends, reset if we're on clone
     track.addEventListener('transitionend', () => {
-            // Reset to beginning cleanly when hitting the clone
-            if (currentIndex >= slides.length - 1) {
-                track.style.transition = "none";
-                currentIndex = 0;
-                track.style.transform = `translateX(0%)`;
-                
-                // Force reflow before re-enabling transition
-                void track.offsetWidth; 
-            }
-        });
+        if (currentIndex === slides.length - 1) {
+            track.style.transition = "none";
+            currentIndex = 0;
+            track.style.transform = `translateX(0%)`;
+        }
     });
 
     if (nextBtn) nextBtn.addEventListener('click', nextSlide);
