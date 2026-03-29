@@ -44,6 +44,7 @@
 
     <script type="module">
         import { auth, db, onAuthStateChanged, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from './firebase-config.js';
+        import { LOGIN_ENABLED } from './auth-flags.js';
 
         const chatBox = document.getElementById('chat-box');
         const msgInput = document.getElementById('msg-input');
@@ -56,7 +57,7 @@
                 currentUser = user;
                 loadMessages();
             } else {
-                window.location.href = "login.html";
+                window.location.href = LOGIN_ENABLED ? "login.html" : "index.html";
             }
         });
 

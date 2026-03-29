@@ -1,5 +1,6 @@
 // components.js
 import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
+import { LOGIN_ENABLED } from './auth-flags.js';
 
 export function loadComponents() {
     const path = window.location.pathname;
@@ -47,8 +48,8 @@ export function loadComponents() {
 
             <li><a href="#main-footer" class="${isContact ? 'active' : ''}">Contact</a></li>
             
-            <li id="nav-auth-item">
-                <a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>
+            <li id="nav-auth-item" style="${LOGIN_ENABLED ? '' : 'display: none;'}">
+                ${LOGIN_ENABLED ? `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>` : ''}
             </li>
             
             <li><a href="https://square.link/u/DPaykecu" class="btn-nav">Donate</a></li>
@@ -63,14 +64,14 @@ export function loadComponents() {
             <h3>Snowdrop United</h3>
             <p>Spreading Hope</p>
             <p class="ein-text">Non-Profit EIN: <strong>883572911</strong></p>
- <div class="social-icons">
-    <a href="https://www.facebook.com/snowdropunited" target="_blank" class="social-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
-    </a>
-    <a href="https://www.instagram.com/snowdropunited" target="_blank" class="social-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-    </a>
-</div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/snowdropunited" target="_blank" rel="noopener noreferrer" class="social-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
+                </a>
+                <a href="https://www.instagram.com/snowdropunited" target="_blank" rel="noopener noreferrer" class="social-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                </a>
+            </div>
         </div>
         <div class="footer-links">
             <a href="mailto:info@snowdropunited.org" class="btn btn-email">&#9993; info@snowdropunited.org</a>
@@ -153,6 +154,15 @@ function handleAuthStatus() {
         const careersLink = document.getElementById('nav-careers');
         const authItem = document.getElementById('nav-auth-item');
 
+        if (!LOGIN_ENABLED) {
+            if (careersLink) careersLink.style.display = 'none';
+            if (authItem) {
+                authItem.style.display = 'none';
+                authItem.innerHTML = '';
+            }
+            return;
+        }
+
         if (user) {
             // --- USER IS LOGGED IN ---
             
@@ -161,6 +171,7 @@ function handleAuthStatus() {
 
             // 2. Change "Login" to "Logout"
             if (authItem) {
+                authItem.style.display = '';
                 authItem.innerHTML = `<button id="btn-logout" style="background:none; border:none; color: #2a80a6; font-weight:600; font-family:inherit; font-size:1rem; cursor:pointer;">Logout</button>`;
                 
                 // Add Logout Click Event
@@ -179,6 +190,7 @@ function handleAuthStatus() {
 
             // 2. Ensure "Login" is shown
             if (authItem) {
+                authItem.style.display = '';
                 authItem.innerHTML = `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>`;
             }
         }

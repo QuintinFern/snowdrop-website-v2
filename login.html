@@ -7,20 +7,30 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* Hide form until auth-flags confirms login is enabled (avoids flash before redirect) */
+        html:not(.login-ready) .auth-container { visibility: hidden; }
         .auth-container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
         .auth-container input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; }
         .toggle-link { color: #2a80a6; cursor: pointer; font-size: 0.9rem; margin-top: 15px; display: block; text-decoration: underline; }
         .error-msg { color: red; font-size: 0.9rem; margin-bottom: 10px; display: none; }
     </style>
     <script type="module">
+        import { LOGIN_ENABLED } from './auth-flags.js';
         import { loadComponents } from './components.js';
-        document.addEventListener('DOMContentLoaded', loadComponents);
+
+        if (LOGIN_ENABLED) {
+            document.documentElement.classList.add('login-ready');
+            document.addEventListener('DOMContentLoaded', loadComponents);
+        } else {
+            window.location.replace('index.html');
+        }
     </script>
 </head>
 <body>
-  
+
 <nav class="navbar" id="main-navbar"></nav>
 
+    <!-- Login UI kept for when LOGIN_ENABLED is true in auth-flags.js -->
     <div class="auth-container">
         <h2 id="form-title">Login</h2>
         <p class="error-msg" id="error-message"></p>
@@ -34,48 +44,52 @@
     </div>
 
     <script type="module">
+        import { LOGIN_ENABLED } from './auth-flags.js';
         import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './firebase-config.js';
 
-        const emailInput = document.getElementById('email');
-        const passInput = document.getElementById('password');
-        const authBtn = document.getElementById('auth-btn');
-        const toggleLink = document.getElementById('toggle-auth');
-        const title = document.getElementById('form-title');
-        const errorMsg = document.getElementById('error-message');
+        if (!LOGIN_ENABLED) {
+            // Redirect handled in <head>; no listeners while login is disabled
+        } else {
+            const emailInput = document.getElementById('email');
+            const passInput = document.getElementById('password');
+            const authBtn = document.getElementById('auth-btn');
+            const toggleLink = document.getElementById('toggle-auth');
+            const title = document.getElementById('form-title');
+            const errorMsg = document.getElementById('error-message');
 
-        let isLogin = true;
+            let isLogin = true;
 
-        toggleLink.addEventListener('click', () => {
-            isLogin = !isLogin;
-            if (isLogin) {
-                title.textContent = "Login";
-                authBtn.textContent = "Log In";
-                toggleLink.textContent = "Don't have an account? Sign Up";
-            } else {
-                title.textContent = "Create Account";
-                authBtn.textContent = "Sign Up";
-                toggleLink.textContent = "Already have an account? Log In";
-            }
-            errorMsg.style.display = 'none';
-        });
-
-        authBtn.addEventListener('click', async () => {
-            const email = emailInput.value;
-            const password = passInput.value;
-
-            try {
+            toggleLink.addEventListener('click', () => {
+                isLogin = !isLogin;
                 if (isLogin) {
-                    await signInWithEmailAndPassword(auth, email, password);
+                    title.textContent = "Login";
+                    authBtn.textContent = "Log In";
+                    toggleLink.textContent = "Don't have an account? Sign Up";
                 } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
+                    title.textContent = "Create Account";
+                    authBtn.textContent = "Sign Up";
+                    toggleLink.textContent = "Already have an account? Log In";
                 }
-                // Redirect to Secure Blog on success
-                window.location.href = "blog.html";
-            } catch (error) {
-                errorMsg.textContent = error.message;
-                errorMsg.style.display = 'block';
-            }
-        });
+                errorMsg.style.display = 'none';
+            });
+
+            authBtn.addEventListener('click', async () => {
+                const email = emailInput.value;
+                const password = passInput.value;
+
+                try {
+                    if (isLogin) {
+                        await signInWithEmailAndPassword(auth, email, password);
+                    } else {
+                        await createUserWithEmailAndPassword(auth, email, password);
+                    }
+                    window.location.href = "blog.html";
+                } catch (error) {
+                    errorMsg.textContent = error.message;
+                    errorMsg.style.display = 'block';
+                }
+            });
+        }
     </script>
 
     <footer class="footer" id="main-footer"></footer>
