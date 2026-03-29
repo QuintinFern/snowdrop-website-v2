@@ -4,7 +4,7 @@
  */
 export const LOGIN_ENABLED = false;
 
-export const LOGIN_UNLOCK_PHRASE = '###snowdropslaysfr';
+export const LOGIN_UNLOCK_PHRASE = 'snowdrop';
 
 const UNLOCK_STORAGE_KEY = 'snowdropLoginUnlocked';
 

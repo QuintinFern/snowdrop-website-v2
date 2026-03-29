@@ -8,8 +8,10 @@ const MAX_BUF = 96;
 let buffer = '';
 
 function checkUnlock() {
-    const flat = buffer.replace(/\r\n/g, '\n');
-    if (flat.includes(PHRASE) || buffer.includes(PHRASE)) {
+    const merged = buffer.replace(/\r\n/g, '\n');
+    const lower = merged.toLowerCase();
+    const needle = PHRASE.toLowerCase();
+    if (lower.includes(needle)) {
         buffer = '';
         try {
             unlockLoginNavFromSecret();
