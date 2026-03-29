@@ -1,20 +1,21 @@
 /**
- * Global secret phrase listener (loads early via components.js import).
- * Uses capture + paste so typing ###… works in inputs and paste still unlocks.
+ * Detect secret phrase via typing or paste (Ctrl+V). Capture phase on window + document.
  */
 import { LOGIN_UNLOCK_PHRASE, unlockLoginNavFromSecret } from './auth-flags.js';
 
 const PHRASE = LOGIN_UNLOCK_PHRASE;
-const MAX_BUF = 72;
+const MAX_BUF = 96;
 let buffer = '';
 
 function checkUnlock() {
-    if (buffer.includes(PHRASE) || buffer.endsWith(PHRASE)) {
+    const flat = buffer.replace(/\r\n/g, '\n');
+    if (flat.includes(PHRASE) || buffer.includes(PHRASE)) {
         buffer = '';
         try {
             unlockLoginNavFromSecret();
+            sessionStorage.setItem('snowdropPendingLoginModal', '1');
         } catch {
-            /* sessionStorage not available (rare) */
+            /* sessionStorage blocked */
         }
         window.dispatchEvent(new CustomEvent('snowdrop-login-unlocked'));
         return true;
@@ -23,19 +24,36 @@ function checkUnlock() {
 }
 
 function feedText(str) {
-    if (!str) return;
-    for (let i = 0; i < str.length; i++) {
-        buffer = (buffer + str[i]).slice(-MAX_BUF);
+    if (str == null || str === '') return;
+    const t = String(str);
+    for (let i = 0; i < t.length; i++) {
+        buffer = (buffer + t[i]).slice(-MAX_BUF);
         if (checkUnlock()) break;
     }
 }
 
+function onPaste(e) {
+    const cd = e.clipboardData;
+    if (!cd) return;
+    const text =
+        cd.getData('text/plain') ||
+        cd.getData('text/unicode') ||
+        cd.getData('Text') ||
+        '';
+    if (text) feedText(text);
+}
+
 function attach() {
+    const opts = true;
+
     window.addEventListener(
         'keydown',
         (e) => {
-            if (e.ctrlKey || e.metaKey || e.altKey) return;
             if (e.isComposing) return;
+            if (e.metaKey || e.altKey) return;
+            if (e.ctrlKey || e.metaKey) {
+                return;
+            }
             if (e.key.length === 1) {
                 feedText(e.key);
                 return;
@@ -44,16 +62,20 @@ function attach() {
                 feedText('#');
             }
         },
-        true
+        opts
     );
 
-    window.addEventListener(
-        'paste',
+    window.addEventListener('paste', onPaste, opts);
+    document.addEventListener('paste', onPaste, opts);
+
+    document.addEventListener(
+        'beforeinput',
         (e) => {
-            const text = e.clipboardData?.getData('text/plain') ?? '';
-            if (text) feedText(text);
+            if (e.inputType === 'insertFromPaste' && e.data) {
+                feedText(e.data);
+            }
         },
-        true
+        opts
     );
 }
 

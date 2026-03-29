@@ -1,5 +1,6 @@
 // components.js
 import './secret-unlock.js';
+import { initLoginModal } from './login-modal.js';
 import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
 import { isLoginNavVisible } from './auth-flags.js';
 
@@ -96,6 +97,7 @@ export function loadComponents() {
     initHubDropdown();
     handleAuthStatus();
     applyAuthNavState(auth.currentUser);
+    initLoginModal();
 }
 
 function applyAuthNavState(user) {
