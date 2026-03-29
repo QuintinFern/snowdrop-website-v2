@@ -8,6 +8,9 @@ export function loadComponents() {
     const isAbout = path.includes("about-us.html");
     const isCareers = path.includes("careers.html");
     const isContact = path.includes("#contact");
+    const isAustinHub = path.includes("austin-hub.html");
+    const isHoustonHub = path.includes("houston-hub.html");
+    const hubNavActive = isAustinHub || isHoustonHub;
 
     // --- NAVBAR HTML ---
     const navbarHTML = `
@@ -27,6 +30,16 @@ export function loadComponents() {
             <li><a href="index.html" class="${isHome ? 'active' : ''}">Home</a></li>
             <li><a href="hope-events.html" class="${isHope ? 'active' : ''}">Hope Events</a></li>
             <li><a href="about-us.html" class="${isAbout ? 'active' : ''}">About Us</a></li>
+            
+            <li class="nav-dropdown ${hubNavActive ? 'active' : ''}">
+                <button type="button" class="nav-dropdown-toggle" id="hub-dropdown-btn" aria-expanded="false" aria-haspopup="true" aria-controls="hub-dropdown-menu">
+                    Hubs <span class="dropdown-chevron" aria-hidden="true">▾</span>
+                </button>
+                <ul class="nav-dropdown-menu" id="hub-dropdown-menu" role="menu">
+                    <li role="none"><a href="austin-hub.html" role="menuitem" class="${isAustinHub ? 'active' : ''}">Austin Hub</a></li>
+                    <li role="none"><a href="houston-hub.html" role="menuitem" class="${isHoustonHub ? 'active' : ''}">Houston Hub</a></li>
+                </ul>
+            </li>
             
             <li id="nav-careers" style="display: none;">
                 <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
@@ -76,6 +89,7 @@ export function loadComponents() {
 
     // Re-initialize Mobile Menu Logic
     initMobileMenu();
+    initHubDropdown();
 
     // === NEW: AUTHENTICATION CHECK ===
     handleAuthStatus();
@@ -89,8 +103,49 @@ function initMobileMenu() {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('nav-active');
             hamburger.classList.toggle('toggle');
+            document.querySelectorAll('.nav-dropdown.open').forEach((el) => {
+                el.classList.remove('open');
+            });
+            const hubBtn = document.getElementById('hub-dropdown-btn');
+            if (hubBtn) hubBtn.setAttribute('aria-expanded', 'false');
+        });
+
+        navLinks.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('nav-active');
+                hamburger.classList.remove('toggle');
+            });
         });
     }
+}
+
+function initHubDropdown() {
+    const dropdown = document.querySelector('.nav-dropdown');
+    const toggle = document.getElementById('hub-dropdown-btn');
+    if (!dropdown || !toggle) return;
+
+    const mq = window.matchMedia('(max-width: 768px)');
+
+    toggle.addEventListener('click', (e) => {
+        if (!mq.matches) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const open = dropdown.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!mq.matches || !dropdown.classList.contains('open')) return;
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    mq.addEventListener('change', () => {
+        dropdown.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+    });
 }
 
 function handleAuthStatus() {

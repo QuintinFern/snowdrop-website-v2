@@ -16,6 +16,10 @@
         .message-input-area input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 50px; margin-right: 10px; outline: none; }
         .sender-name { font-size: 0.7rem; color: #777; margin-bottom: 2px; display: block; }
     </style>
+    <script type="module">
+        import { loadComponents } from './components.js';
+        document.addEventListener('DOMContentLoaded', loadComponents);
+    </script>
 </head>
 <body>
    
@@ -39,12 +43,11 @@
     </section>
 
     <script type="module">
-        import { auth, db, onAuthStateChanged, signOut, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from './firebase-config.js';
 
         const chatBox = document.getElementById('chat-box');
         const msgInput = document.getElementById('msg-input');
         const sendBtn = document.getElementById('send-btn');
-        const logoutBtn = document.getElementById('logout-btn');
         let currentUser = null;
 
         // 1. SECURITY CHECK: Kick user out if not logged in
@@ -57,14 +60,7 @@
             }
         });
 
-        // 2. LOGOUT FUNCTION
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = "index.html";
-            });
-        });
-
-        // 3. SEND MESSAGE
+        // 2. SEND MESSAGE
         sendBtn.addEventListener('click', async () => {
             if (msgInput.value.trim() === "") return;
             
@@ -81,7 +77,7 @@
             }
         });
 
-        // 4. LOAD MESSAGES REAL-TIME
+        // 3. LOAD MESSAGES REAL-TIME
         function loadMessages() {
             const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
             
@@ -109,5 +105,7 @@
             });
         }
     </script>
+
+    <footer class="footer" id="main-footer"></footer>
 </body>
 </html>

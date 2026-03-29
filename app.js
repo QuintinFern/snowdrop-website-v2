@@ -130,7 +130,7 @@ sliders.forEach(slider => {
     slides = Array.from(track.children);
 
     function updateSlide() {
-        track.style.transition = "transform 0.6s ease-in-out";
+        track.style.transition = "transform 0.65s cubic-bezier(0.33, 1, 0.68, 1)";
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
     }
 
