@@ -1,6 +1,6 @@
 // components.js
 import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
-import { LOGIN_ENABLED } from './auth-flags.js';
+import { LOGIN_UNLOCK_PHRASE, isLoginNavVisible, unlockLoginNavFromSecret } from './auth-flags.js';
 
 export function loadComponents() {
     const path = window.location.pathname;
@@ -12,8 +12,9 @@ export function loadComponents() {
     const isAustinHub = path.includes("austin-hub.html");
     const isHoustonHub = path.includes("houston-hub.html");
     const hubNavActive = isAustinHub || isHoustonHub;
+    const isMemberHub = path.includes("blog.html");
+    const loginNav = isLoginNavVisible();
 
-    // --- NAVBAR HTML ---
     const navbarHTML = `
     <div class="container nav-container">
         <div class="logo">
@@ -46,10 +47,14 @@ export function loadComponents() {
                 <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
             </li>
 
+            <li id="nav-member-hub" style="display: none;">
+                <a href="blog.html" class="${isMemberHub ? 'active' : ''}">Member Hub</a>
+            </li>
+
             <li><a href="#main-footer" class="${isContact ? 'active' : ''}">Contact</a></li>
             
-            <li id="nav-auth-item" style="${LOGIN_ENABLED ? '' : 'display: none;'}">
-                ${LOGIN_ENABLED ? `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>` : ''}
+            <li id="nav-auth-item" style="${loginNav ? '' : 'display: none;'}">
+                ${loginNav ? `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>` : ''}
             </li>
             
             <li><a href="https://square.link/u/DPaykecu" class="btn-nav">Donate</a></li>
@@ -57,7 +62,6 @@ export function loadComponents() {
     </div>
     `;
 
-    // --- FOOTER HTML ---
     const footerHTML = `
     <div class="container footer-content">
         <div class="footer-info">
@@ -81,19 +85,82 @@ export function loadComponents() {
     <div class="footer-bottom"><p>&copy; ${new Date().getFullYear()} Snowdrop United.</p></div>
     `;
 
-    // Inject into HTML
     const navElement = document.getElementById('main-navbar');
     const footerElement = document.getElementById('main-footer');
 
     if (navElement) navElement.innerHTML = navbarHTML;
     if (footerElement) footerElement.innerHTML = footerHTML;
 
-    // Re-initialize Mobile Menu Logic
     initMobileMenu();
     initHubDropdown();
-
-    // === NEW: AUTHENTICATION CHECK ===
+    initLoginSecretUnlock();
     handleAuthStatus();
+}
+
+function applyAuthNavState(user) {
+    const careersLink = document.getElementById('nav-careers');
+    const authItem = document.getElementById('nav-auth-item');
+    const memberHubLink = document.getElementById('nav-member-hub');
+
+    const showLogin = isLoginNavVisible();
+
+    if (!showLogin) {
+        if (careersLink) careersLink.style.display = 'none';
+        if (memberHubLink) memberHubLink.style.display = 'none';
+        if (authItem) {
+            authItem.style.display = 'none';
+            authItem.innerHTML = '';
+        }
+        return;
+    }
+
+    if (user) {
+        if (careersLink) careersLink.style.display = 'block';
+        if (memberHubLink) memberHubLink.style.display = '';
+        if (authItem) {
+            authItem.style.display = '';
+            authItem.innerHTML = `<button id="btn-logout" type="button" style="background:none;border:none;color:#2a80a6;font-weight:600;font-family:inherit;font-size:1rem;cursor:pointer;">Logout</button>`;
+            const btn = document.getElementById('btn-logout');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        window.location.href = 'index.html';
+                    });
+                });
+            }
+        }
+    } else {
+        if (careersLink) careersLink.style.display = 'none';
+        if (memberHubLink) memberHubLink.style.display = 'none';
+        if (authItem) {
+            authItem.style.display = '';
+            authItem.innerHTML = `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>`;
+        }
+    }
+}
+
+let loginSecretUnlockBound = false;
+
+function initLoginSecretUnlock() {
+    if (loginSecretUnlockBound) return;
+    loginSecretUnlockBound = true;
+    const phrase = LOGIN_UNLOCK_PHRASE;
+    let buffer = '';
+
+    document.addEventListener('keydown', (e) => {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key.length !== 1) return;
+        buffer = (buffer + e.key).slice(-Math.max(phrase.length, 32));
+        if (buffer.endsWith(phrase)) {
+            buffer = '';
+            unlockLoginNavFromSecret();
+            applyAuthNavState(auth.currentUser);
+        }
+    });
+}
+
+function handleAuthStatus() {
+    onAuthStateChanged(auth, applyAuthNavState);
 }
 
 function initMobileMenu() {
@@ -146,53 +213,5 @@ function initHubDropdown() {
     mq.addEventListener('change', () => {
         dropdown.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
-    });
-}
-
-function handleAuthStatus() {
-    onAuthStateChanged(auth, (user) => {
-        const careersLink = document.getElementById('nav-careers');
-        const authItem = document.getElementById('nav-auth-item');
-
-        if (!LOGIN_ENABLED) {
-            if (careersLink) careersLink.style.display = 'none';
-            if (authItem) {
-                authItem.style.display = 'none';
-                authItem.innerHTML = '';
-            }
-            return;
-        }
-
-        if (user) {
-            // --- USER IS LOGGED IN ---
-            
-            // 1. Show Careers Link
-            if (careersLink) careersLink.style.display = 'block';
-
-            // 2. Change "Login" to "Logout"
-            if (authItem) {
-                authItem.style.display = '';
-                authItem.innerHTML = `<button id="btn-logout" style="background:none; border:none; color: #2a80a6; font-weight:600; font-family:inherit; font-size:1rem; cursor:pointer;">Logout</button>`;
-                
-                // Add Logout Click Event
-                document.getElementById('btn-logout').addEventListener('click', () => {
-                    signOut(auth).then(() => {
-                        window.location.href = "index.html";
-                    });
-                });
-            }
-
-        } else {
-            // --- USER IS LOGGED OUT ---
-            
-            // 1. Hide Careers Link
-            if (careersLink) careersLink.style.display = 'none';
-
-            // 2. Ensure "Login" is shown
-            if (authItem) {
-                authItem.style.display = '';
-                authItem.innerHTML = `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>`;
-            }
-        }
     });
 }

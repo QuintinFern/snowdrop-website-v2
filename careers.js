@@ -1,5 +1,5 @@
 import { auth, db, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, onAuthStateChanged } from "./firebase-config.js";
-import { LOGIN_ENABLED } from "./auth-flags.js";
+import { isLoginNavVisible } from "./auth-flags.js";
 
 // === CONFIGURATION ===
 const ADMIN_EMAIL = "admin@snowdropunited.org"; 
@@ -24,7 +24,7 @@ onAuthStateChanged(auth, (user) => {
             if(adminPanel) adminPanel.style.display = "none";
         }
     } else {
-        window.location.href = LOGIN_ENABLED ? "login.html" : "index.html";
+        window.location.href = isLoginNavVisible() ? "login.html" : "index.html";
     }
 });
 

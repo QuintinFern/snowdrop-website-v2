@@ -15,10 +15,10 @@
         .error-msg { color: red; font-size: 0.9rem; margin-bottom: 10px; display: none; }
     </style>
     <script type="module">
-        import { LOGIN_ENABLED } from './auth-flags.js';
+        import { isLoginNavVisible } from './auth-flags.js';
         import { loadComponents } from './components.js';
 
-        if (LOGIN_ENABLED) {
+        if (isLoginNavVisible()) {
             document.documentElement.classList.add('login-ready');
             document.addEventListener('DOMContentLoaded', loadComponents);
         } else {
@@ -44,10 +44,10 @@
     </div>
 
     <script type="module">
-        import { LOGIN_ENABLED } from './auth-flags.js';
+        import { isLoginNavVisible } from './auth-flags.js';
         import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './firebase-config.js';
 
-        if (!LOGIN_ENABLED) {
+        if (!isLoginNavVisible()) {
             // Redirect handled in <head>; no listeners while login is disabled
         } else {
             const emailInput = document.getElementById('email');

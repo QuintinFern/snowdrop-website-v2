@@ -3,110 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Blog | Snowdrop United</title>
+    <title>Member Hub | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="member-hub.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        .chat-container { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; background: white;}
-        .chat-box { height: 400px; overflow-y: scroll; padding: 20px; background: #f9f9f9; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; }
-        .message { padding: 10px 15px; border-radius: 20px; max-width: 70%; font-size: 0.9rem; }
-        .my-message { align-self: flex-end; background: #2a80a6; color: white; }
-        .other-message { align-self: flex-start; background: #e0e0e0; color: #333; }
-        .message-input-area { display: flex; padding: 10px; background: white; }
-        .message-input-area input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 50px; margin-right: 10px; outline: none; }
-        .sender-name { font-size: 0.7rem; color: #777; margin-bottom: 2px; display: block; }
-    </style>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script type="module">
         import { loadComponents } from './components.js';
         document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 </head>
 <body>
-   
+
 <nav class="navbar" id="main-navbar"></nav>
 
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">Community Chat</h2>
-            <p class="section-subtitle">Connect with other Snowdrop members.</p>
-            
-            <div class="chat-container">
-                <div id="chat-box" class="chat-box">
-                    <div style="text-align: center; color: #999;">Loading secure chat...</div>
+<div class="hub-page">
+    <div class="hub-wrap">
+        <header class="hub-hero">
+            <h1>Member Hub</h1>
+            <p>Signed in as <strong id="hub-user-email">…</strong> — blog, profile, groups, files, map, and events in one place.</p>
+        </header>
+
+        <nav class="hub-tabs" aria-label="Member hub sections">
+            <button type="button" class="hub-tab is-active" data-hub-tab="blog">Blog</button>
+            <button type="button" class="hub-tab" data-hub-tab="profile">Profile</button>
+            <button type="button" class="hub-tab" data-hub-tab="groups">Groups</button>
+            <button type="button" class="hub-tab" data-hub-tab="files">Files</button>
+            <button type="button" class="hub-tab" data-hub-tab="map">Map</button>
+            <button type="button" class="hub-tab" data-hub-tab="calendar">Calendar</button>
+        </nav>
+
+        <!-- Blog -->
+        <section id="hub-panel-blog" class="hub-panel is-active" aria-labelledby="hub-tab-blog">
+            <div class="hub-grid-2">
+                <div class="hub-card">
+                    <h2>New post</h2>
+                    <form id="hub-post-form">
+                        <div class="hub-field">
+                            <label for="hub-post-title">Title</label>
+                            <input type="text" id="hub-post-title" required maxlength="140" placeholder="Headline">
+                        </div>
+                        <div class="hub-field">
+                            <label for="hub-post-body">Body</label>
+                            <textarea id="hub-post-body" required placeholder="Write your update for the community…"></textarea>
+                        </div>
+                        <button type="submit" class="hub-btn hub-btn--primary">Publish post</button>
+                    </form>
                 </div>
-                <div class="message-input-area">
-                    <input type="text" id="msg-input" placeholder="Type a message...">
-                    <button class="btn-primary" id="send-btn">Send</button>
+                <div class="hub-card">
+                    <h2>Community feed</h2>
+                    <div id="hub-post-list" class="hub-post-list"></div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <script type="module">
-        import { auth, db, onAuthStateChanged, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from './firebase-config.js';
-        import { LOGIN_ENABLED } from './auth-flags.js';
+        <!-- Profile -->
+        <section id="hub-panel-profile" class="hub-panel" aria-label="Profile">
+            <div class="hub-card" style="max-width:640px">
+                <h2>Your profile</h2>
+                <p style="color:var(--hub-muted);font-size:0.92rem;margin:0 0 16px">Visible to you and used when you publish posts.</p>
+                <form id="hub-profile-form">
+                    <div class="hub-field">
+                        <label for="hub-profile-name">Display name</label>
+                        <input type="text" id="hub-profile-name" maxlength="80" placeholder="How you want to appear">
+                    </div>
+                    <div class="hub-field">
+                        <label for="hub-profile-bio">Bio</label>
+                        <textarea id="hub-profile-bio" maxlength="600" placeholder="A few lines about you"></textarea>
+                    </div>
+                    <div class="hub-field">
+                        <label for="hub-profile-phone">Phone (optional)</label>
+                        <input type="tel" id="hub-profile-phone" placeholder="For internal coordination only">
+                    </div>
+                    <button type="submit" class="hub-btn hub-btn--primary">Save profile</button>
+                </form>
+            </div>
+        </section>
 
-        const chatBox = document.getElementById('chat-box');
-        const msgInput = document.getElementById('msg-input');
-        const sendBtn = document.getElementById('send-btn');
-        let currentUser = null;
+        <!-- Groups -->
+        <section id="hub-panel-groups" class="hub-panel" aria-label="Groups">
+            <div class="hub-grid-2">
+                <div class="hub-card">
+                    <h2>Your groups</h2>
+                    <div id="hub-groups-list" class="hub-groups-grid"></div>
+                </div>
+                <div class="hub-card">
+                    <h2>Create a group</h2>
+                    <form id="hub-group-create">
+                        <div class="hub-field">
+                            <label for="hub-group-name">Group name</label>
+                            <input type="text" id="hub-group-name" required maxlength="80">
+                        </div>
+                        <div class="hub-field">
+                            <label for="hub-group-desc">Description</label>
+                            <textarea id="hub-group-desc" maxlength="500" placeholder="What is this group for?"></textarea>
+                        </div>
+                        <button type="submit" class="hub-btn hub-btn--primary">Create group</button>
+                    </form>
+                </div>
+            </div>
+        </section>
 
-        // 1. SECURITY CHECK: Kick user out if not logged in
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                loadMessages();
-            } else {
-                window.location.href = LOGIN_ENABLED ? "login.html" : "index.html";
-            }
-        });
+        <!-- Files -->
+        <section id="hub-panel-files" class="hub-panel" aria-label="File uploads">
+            <div class="hub-card" style="max-width:720px">
+                <h2>Shared files</h2>
+                <p style="color:var(--hub-muted);font-size:0.92rem;margin:0 0 16px">Upload documents or images for the team. Stored in Firebase Storage.</p>
+                <div class="hub-field">
+                    <label for="hub-file-input">Choose file</label>
+                    <input type="file" id="hub-file-input">
+                </div>
+                <button type="button" class="hub-btn hub-btn--primary" id="hub-file-upload-btn">Upload</button>
+                <ul id="hub-file-list" class="hub-file-list" style="margin-top:20px"></ul>
+            </div>
+        </section>
 
-        // 2. SEND MESSAGE
-        sendBtn.addEventListener('click', async () => {
-            if (msgInput.value.trim() === "") return;
-            
-            try {
-                await addDoc(collection(db, "messages"), {
-                    text: msgInput.value,
-                    uid: currentUser.uid,
-                    email: currentUser.email,
-                    createdAt: serverTimestamp()
-                });
-                msgInput.value = ""; // Clear input
-            } catch (e) {
-                console.error("Error sending message: ", e);
-            }
-        });
+        <!-- Map -->
+        <section id="hub-panel-map" class="hub-panel" aria-label="Map">
+            <div class="hub-grid-2">
+                <div class="hub-card">
+                    <h2>Community map</h2>
+                    <p style="color:var(--hub-muted);font-size:0.9rem;margin:0 0 12px">Click the map to set coordinates, then describe the place (outreach site, donation drop-off, etc.).</p>
+                    <div id="hub-map" class="hub-map-wrap" role="application" aria-label="Interactive map"></div>
+                </div>
+                <div class="hub-card">
+                    <h2>Add a place</h2>
+                    <form id="hub-map-form">
+                        <div class="hub-field">
+                            <label for="hub-map-title">Title</label>
+                            <input type="text" id="hub-map-title" required maxlength="100">
+                        </div>
+                        <div class="hub-field">
+                            <label for="hub-map-desc">Description</label>
+                            <textarea id="hub-map-desc" maxlength="400" placeholder="Details for volunteers…"></textarea>
+                        </div>
+                        <div class="hub-grid-2" style="grid-template-columns:1fr 1fr;gap:12px">
+                            <div class="hub-field">
+                                <label for="hub-map-lat">Latitude</label>
+                                <input type="text" id="hub-map-lat" inputmode="decimal" placeholder="Click map">
+                            </div>
+                            <div class="hub-field">
+                                <label for="hub-map-lng">Longitude</label>
+                                <input type="text" id="hub-map-lng" inputmode="decimal" placeholder="Click map">
+                            </div>
+                        </div>
+                        <button type="submit" class="hub-btn hub-btn--primary">Add to map</button>
+                    </form>
+                </div>
+            </div>
+        </section>
 
-        // 3. LOAD MESSAGES REAL-TIME
-        function loadMessages() {
-            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-            
-            onSnapshot(q, (snapshot) => {
-                chatBox.innerHTML = ""; // Clear current list
-                snapshot.forEach((doc) => {
-                    const msg = doc.data();
-                    const div = document.createElement("div");
-                    const isMe = msg.uid === currentUser.uid;
-                    
-                    div.className = `message ${isMe ? 'my-message' : 'other-message'}`;
-                    
-                    // Show email of sender if it's not me
-                    let content = "";
-                    if (!isMe) {
-                        content += `<span class='sender-name'>${msg.email.split('@')[0]}</span>`;
-                    }
-                    content += msg.text;
-                    
-                    div.innerHTML = content;
-                    chatBox.appendChild(div);
-                });
-                // Auto scroll to bottom
-                chatBox.scrollTop = chatBox.scrollHeight;
-            });
-        }
-    </script>
+        <!-- Calendar -->
+        <section id="hub-panel-calendar" class="hub-panel" aria-label="Events">
+            <div class="hub-grid-2">
+                <div class="hub-card">
+                    <h2>Event calendar</h2>
+                    <div class="hub-cal-head">
+                        <button type="button" class="hub-btn hub-btn--ghost" id="hub-cal-prev" aria-label="Previous month">←</button>
+                        <h3 id="hub-cal-month-label"></h3>
+                        <button type="button" class="hub-btn hub-btn--ghost" id="hub-cal-next" aria-label="Next month">→</button>
+                    </div>
+                    <div class="hub-cal-dates">
+                        <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                    </div>
+                    <div id="hub-cal-grid" class="hub-cal-grid"></div>
+                    <div class="hub-event-list">
+                        <h4 id="hub-event-list-label">Upcoming (all)</h4>
+                        <div id="hub-event-list"></div>
+                    </div>
+                </div>
+                <div class="hub-card">
+                    <h2>New event</h2>
+                    <form id="hub-event-form">
+                        <div class="hub-field">
+                            <label for="hub-event-title">Title</label>
+                            <input type="text" id="hub-event-title" required maxlength="120">
+                        </div>
+                        <div class="hub-field">
+                            <label for="hub-event-datetime">Date &amp; time</label>
+                            <input type="datetime-local" id="hub-event-datetime" required step="60">
+                        </div>
+                        <div class="hub-field">
+                            <label for="hub-event-notes">Details</label>
+                            <textarea id="hub-event-notes" maxlength="800" placeholder="Location, volunteers needed, etc."></textarea>
+                        </div>
+                        <button type="submit" class="hub-btn hub-btn--primary">Add event</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
 
-    <footer class="footer" id="main-footer"></footer>
+<footer class="footer" id="main-footer"></footer>
+
+<script type="module">
+    import { startMemberHub } from './member-hub.js';
+    startMemberHub();
+</script>
 </body>
 </html>
