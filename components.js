@@ -1,6 +1,7 @@
 // components.js
+import './secret-unlock.js';
 import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
-import { LOGIN_UNLOCK_PHRASE, isLoginNavVisible, unlockLoginNavFromSecret } from './auth-flags.js';
+import { isLoginNavVisible } from './auth-flags.js';
 
 export function loadComponents() {
     const path = window.location.pathname;
@@ -93,8 +94,8 @@ export function loadComponents() {
 
     initMobileMenu();
     initHubDropdown();
-    initLoginSecretUnlock();
     handleAuthStatus();
+    applyAuthNavState(auth.currentUser);
 }
 
 function applyAuthNavState(user) {
@@ -139,25 +140,9 @@ function applyAuthNavState(user) {
     }
 }
 
-let loginSecretUnlockBound = false;
-
-function initLoginSecretUnlock() {
-    if (loginSecretUnlockBound) return;
-    loginSecretUnlockBound = true;
-    const phrase = LOGIN_UNLOCK_PHRASE;
-    let buffer = '';
-
-    document.addEventListener('keydown', (e) => {
-        if (e.metaKey || e.ctrlKey || e.altKey) return;
-        if (e.key.length !== 1) return;
-        buffer = (buffer + e.key).slice(-Math.max(phrase.length, 32));
-        if (buffer.endsWith(phrase)) {
-            buffer = '';
-            unlockLoginNavFromSecret();
-            applyAuthNavState(auth.currentUser);
-        }
-    });
-}
+window.addEventListener('snowdrop-login-unlocked', () => {
+    applyAuthNavState(auth.currentUser);
+});
 
 function handleAuthStatus() {
     onAuthStateChanged(auth, applyAuthNavState);
