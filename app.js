@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainEvents: 5,      
         directors: 6,       
         houstonHub: 7,      
-        austinHub: 5,
+        austinHub: 6,
         // NEW: Config for the header background sliders
         // This assumes you have images named 'collage-about-us-1.jpg' through '4.jpg'
         aboutHeader: 4,     
@@ -56,6 +56,23 @@ const houstonHubNames = [
     "Joseph Le"         // Fundraising Director
 ];
 
+const austinHubNames = [
+	"Kishen Misra",
+	"Kevin Phan",
+	"Ben Lansky",
+	"Zuhair Kazi",
+	"Giacomo Pietropaolo",
+	"Ryan Skinner"
+];
+
+const austinHubTitles = [
+    "President",
+    "Vice President",
+    "Financial Director,
+    "Partnerships Director",
+    "Operations Director",
+	"Growth Director"
+];
 
     // ================= IMAGE LOADER FUNCTION =================
     function loadImages(containerId, count, prefix, isSlider = false, namesArray = [], titlesArray = []) {
@@ -101,8 +118,11 @@ const houstonHubNames = [
     loadImages('event-slider', config.mainEvents, 'event-photo', true);
     loadImages('directors-grid', config.directors, 'director', false, directorNames, directorTitles);
     loadImages('houston-hub-grid', config.houstonHub, 'houston-hub', false, houstonHubNames, houstonHubTitles);
+	loadImages('austin-hub-grid', config.austinHub, 'austin-hub', false, austinHubNames, austinHubTitles);
     loadImages('houston-slider', config.houstonHub, 'houston-hub-event', true);
     loadImages('austin-slider', config.austinHub, 'austin-hub-event', true);
+	
+
 
     // NEW: Load images for the new header backgrounds
     // This uses your existing collage images (collage-about-us-1.jpg, etc.)
