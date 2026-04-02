@@ -35,8 +35,17 @@ img { max-width: 100%; display: block; }
 .nav-links a { color: var(--text-color); font-weight: 500; transition: color 0.3s;}
 .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
 
-/* Hubs dropdown */
+/* About Us + hub submenu */
 .nav-dropdown { position: relative; }
+.nav-about-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.nav-about-link {
+    color: var(--text-color);
+    font-weight: 500;
+}
 .nav-dropdown-toggle {
     background: none;
     border: none;
@@ -44,15 +53,15 @@ img { max-width: 100%; display: block; }
     color: var(--text-color);
     font-weight: 500;
     cursor: pointer;
-    padding: 0;
+    padding: 2px 4px;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
     transition: color 0.3s;
 }
 .nav-dropdown-toggle:hover,
-.nav-dropdown:focus-within > .nav-dropdown-toggle,
-.nav-dropdown.active > .nav-dropdown-toggle {
+.nav-dropdown:focus-within .nav-dropdown-toggle,
+.nav-dropdown.active .nav-dropdown-toggle {
     color: var(--primary-color);
 }
 .dropdown-chevron {
@@ -475,14 +484,24 @@ img { max-width: 100%; display: block; }
         flex-direction: column;
         align-items: center;
     }
+    .nav-about-row {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .nav-about-row .nav-about-link {
+        font-size: 1.2rem;
+        color: #333;
+    }
     .nav-dropdown-menu {
         display: none;
     }
     .nav-dropdown-toggle {
         color: #333;
-        font-size: 1.2rem;
+        font-size: 1rem;
+        min-width: 36px;
+        min-height: 36px;
         justify-content: center;
-        width: auto;
     }
     .nav-dropdown.open .dropdown-chevron {
         transform: rotate(180deg);

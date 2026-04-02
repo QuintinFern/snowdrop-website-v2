@@ -32,12 +32,14 @@ export function loadComponents() {
 
         <ul class="nav-links" id="nav-links">
             <li><a href="index.html" class="${isHome ? 'active' : ''}">Home</a></li>
-            <li><a href="about-us.html" class="${isAbout ? 'active' : ''}">About Us</a></li>
             
-            <li class="nav-dropdown ${hubNavActive ? 'active' : ''}">
-                <button type="button" class="nav-dropdown-toggle" id="hub-dropdown-btn" aria-expanded="false" aria-haspopup="true" aria-controls="hub-dropdown-menu">
-                    Hubs <span class="dropdown-chevron" aria-hidden="true">▾</span>
-                </button>
+            <li class="nav-dropdown ${isAbout || hubNavActive ? 'active' : ''}">
+                <div class="nav-about-row">
+                    <a href="about-us.html" class="nav-about-link ${isAbout ? 'active' : ''}">About Us</a>
+                    <button type="button" class="nav-dropdown-toggle" id="hub-dropdown-btn" aria-label="Show Austin and Houston hubs" aria-expanded="false" aria-haspopup="true" aria-controls="hub-dropdown-menu">
+                        <span class="dropdown-chevron" aria-hidden="true">▾</span>
+                    </button>
+                </div>
                 <ul class="nav-dropdown-menu" id="hub-dropdown-menu" role="menu">
                     <li role="none"><a href="austin-hub.html" role="menuitem" class="${isAustinHub ? 'active' : ''}">Austin Hub</a></li>
                     <li role="none"><a href="houston-hub.html" role="menuitem" class="${isHoustonHub ? 'active' : ''}">Houston Hub</a></li>
