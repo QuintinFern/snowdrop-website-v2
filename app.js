@@ -68,7 +68,7 @@ const austinHubNames = [
 const austinHubTitles = [
     "President",
     "Vice President",
-    "Financial Director,
+    "Financial Director",
     "Partnerships Director",
     "Operations Director",
 	"Growth Director"
@@ -96,7 +96,7 @@ const austinHubTitles = [
             wrapper.appendChild(img);
 
             // Add name and title for directors/Houston Hub
-            if (prefix === 'director' || prefix === 'houston-hub') {
+            if (prefix === 'director' || prefix === 'houston-hub' || prefix === 'austin-hub') {
                 const name = document.createElement('h3');
                 name.textContent = namesArray[i - 1] || "Member";
 
