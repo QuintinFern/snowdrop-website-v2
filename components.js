@@ -32,7 +32,6 @@ export function loadComponents() {
 
         <ul class="nav-links" id="nav-links">
             <li><a href="index.html" class="${isHome ? 'active' : ''}">Home</a></li>
-            <li><a href="hope-events.html" class="${isHope ? 'active' : ''}">Hope Events</a></li>
             <li><a href="about-us.html" class="${isAbout ? 'active' : ''}">About Us</a></li>
             
             <li class="nav-dropdown ${hubNavActive ? 'active' : ''}">
@@ -44,6 +43,8 @@ export function loadComponents() {
                     <li role="none"><a href="houston-hub.html" role="menuitem" class="${isHoustonHub ? 'active' : ''}">Houston Hub</a></li>
                 </ul>
             </li>
+            
+            <li><a href="hope-events.html" class="${isHope ? 'active' : ''}">Hope Events</a></li>
             
             <li id="nav-careers" style="display: none;">
                 <a href="careers.html" class="${isCareers ? 'active' : ''}">Careers</a>
