@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Filenames in /images are not consistently cased (some are .JPG). Static hosts
     // like GitHub Pages are case-sensitive, so try each candidate before giving up.
     const IMAGE_EXTENSIONS = ['.jpg', '.JPG', '.jpeg', '.png'];
+    const IMAGE_RETRIES = 2;      // per extension, for transient network failures
+    const RETRY_DELAY_MS = 350;
 
     // ================= PHOTO SLIDERS =================
     // count must match the number of images actually present in /images,
@@ -86,22 +88,58 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Point an <img> at images/<base><ext>, walking through the extension
      * candidates on failure. Resolves true when a file loads, false when none do.
+     *
+     * An <img> error event carries no status code, so "file does not exist" and
+     * "the connection dropped" are indistinguishable. Pages like about-us.html
+     * request ~20 images at once, and under that burst a request can fail
+     * transiently — so each URL is retried before we conclude the file is
+     * missing. Without the retry, one hiccup permanently replaced a real
+     * headshot with the placeholder until the page was reloaded from cache.
      */
     function resolveImage(img, base) {
         return new Promise((resolve) => {
-            let attempt = 0;
+            let extIndex = 0;
+            let retriesLeft = IMAGE_RETRIES;
 
-            const tryNext = () => {
-                if (attempt >= IMAGE_EXTENSIONS.length) {
-                    resolve(false);
+            const urlFor = (ext) => `images/${base}${ext}`;
+
+            function finish(ok) {
+                img.removeEventListener('load', onLoad);
+                img.removeEventListener('error', onError);
+                if (!ok) {
+                    console.warn(`[snowdrop] no image found for "${base}" (tried ${IMAGE_EXTENSIONS.join(', ')})`);
+                }
+                resolve(ok);
+            }
+
+            function onLoad() {
+                finish(true);
+            }
+
+            function onError() {
+                if (retriesLeft > 0) {
+                    retriesLeft--;
+                    // Re-request the same file. The query string is only here to
+                    // defeat the browser's negative cache for the failed request.
+                    const attempt = IMAGE_RETRIES - retriesLeft;
+                    setTimeout(() => {
+                        img.src = `${urlFor(IMAGE_EXTENSIONS[extIndex])}?retry=${attempt}`;
+                    }, RETRY_DELAY_MS);
                     return;
                 }
-                img.src = `images/${base}${IMAGE_EXTENSIONS[attempt++]}`;
-            };
 
-            img.addEventListener('load', () => resolve(true), { once: true });
-            img.addEventListener('error', tryNext);
-            tryNext();
+                extIndex += 1;
+                retriesLeft = IMAGE_RETRIES;
+                if (extIndex >= IMAGE_EXTENSIONS.length) {
+                    finish(false);
+                    return;
+                }
+                img.src = urlFor(IMAGE_EXTENSIONS[extIndex]);
+            }
+
+            img.addEventListener('load', onLoad);
+            img.addEventListener('error', onError);
+            img.src = urlFor(IMAGE_EXTENSIONS[extIndex]);
         });
     }
 
