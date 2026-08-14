@@ -19,6 +19,19 @@ html {
 }
 
 body { font-family: var(--font-body); margin: 0; padding: 0; color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
+
+/* Gated pages (see hub-gate.js): stay hidden until access is confirmed, and
+   stay hidden if the gate script never runs. */
+html.is-gated body { visibility: hidden; }
+.gated-banner {
+    background: #8a3b00;
+    color: var(--white);
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
 a { text-decoration: none; }
 ul { list-style: none; padding: 0; margin: 0; }
 img { max-width: 100%; display: block; }
@@ -35,7 +48,10 @@ img { max-width: 100%; display: block; }
 .nav-links a { color: var(--text-color); font-weight: 500; transition: color 0.3s;}
 .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
 
-/* About Us + hub submenu */
+/* About Us + hub submenu.
+   Currently unused: the navbar renders About Us as a plain link while the
+   Austin/Houston hub pages are gated. Kept so the submenu can be restored
+   by putting the .nav-dropdown markup back in components.js. */
 .nav-dropdown { position: relative; }
 .nav-about-row {
     display: inline-flex;
@@ -277,6 +293,7 @@ img { max-width: 100%; display: block; }
 }
 .hero-content h1, .page-header h1 { font-size: 3rem; margin-bottom: 1rem; font-family: var(--font-heading); line-height: 1.2; }
 .hero-content p, .page-header p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+.page-header .slider-container { margin-top: 30px; }
 
 /* --- GENERAL SECTIONS --- */
 .section { padding: 60px 0; }
@@ -341,27 +358,105 @@ img { max-width: 100%; display: block; }
 #houston-card .btn-outline:hover, #austin-card .btn-outline:hover, #new-hub-card .btn-outline:hover { background: white; color: var(--primary-color); }
 
 /* Sliders */
-.slider-container { position: relative; max-width: 800px; margin: 0 auto; overflow: hidden; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.slider-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background: #dfeef5;
+}
+.slider-container[hidden] { display: none; }
 .header-bg-slider { border-radius: 0; box-shadow: none; max-width: 100%; } /* Remove shadow for background slider */
-.slider-track { display: flex; transition: transform 0.65s cubic-bezier(0.33, 1, 0.68, 1); width: 100%; }
-.slide { min-width: 100%; }
-.slide img { width: 100%; height: 400px; object-fit: cover; display: block; }
-.slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 24px; z-index: 10; }
+.slider-track {
+    display: flex;
+    transition: transform 0.65s cubic-bezier(0.33, 1, 0.68, 1);
+    width: 100%;
+    will-change: transform;
+}
+.slide { min-width: 100%; flex: 0 0 100%; }
+.slide img {
+    width: 100%;
+    /* Was a hard 400px, which over-cropped inside narrow columns and on phones */
+    height: clamp(220px, 42vw, 400px);
+    object-fit: cover;
+    display: block;
+    background: #dfeef5;
+}
+
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.45);
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    z-index: 10;
+    transition: background 0.2s, transform 0.2s;
+}
+.slider-btn:hover { background: rgba(0,0,0,0.72); }
+.slider-btn:focus-visible { outline: 3px solid var(--white); outline-offset: 2px; }
+.slider-btn[hidden] { display: none; }
 .prev-btn { left: 10px; }
 .next-btn { right: 10px; }
+
+.slider-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 10;
+}
+.slider-dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.45);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+.slider-dot.is-active { background: var(--white); transform: scale(1.35); }
+.slider-dot:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 
 /* --- DIRECTORS FIX --- */
 .directors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
 .director-card { text-align: center; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-.director-card img { 
-    width: 150px; 
-    height: 150px; 
-    border-radius: 50%; 
-    object-fit: cover; 
+.director-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
     margin: 0 auto 15px auto; /* FIXED: Centered the image */
-    border: 3px solid var(--primary-color); 
-    display: block; 
+    border: 3px solid var(--primary-color);
+    display: block;
+    background: var(--bg-light);
 }
+/* Member without a headshot yet: contain the logo instead of cropping it */
+.director-card img.is-placeholder {
+    object-fit: contain;
+    padding: 22px;
+    box-sizing: border-box;
+    border-style: dashed;
+}
+.director-card h3 { margin: 0 0 4px; }
+.director-title { color: var(--primary-color); font-weight: 700; margin: 0; }
 
 /* Footer — centered, compact */
 .footer {
@@ -542,4 +637,12 @@ img { max-width: 100%; display: block; }
     
     /* 6. GRID FIXES */
     .hub-grid { grid-template-columns: 1fr; } /* Force 1 column on mobile */
+
+    /* 7. SLIDERS — keep controls thumb-friendly and out of the artwork */
+    .slider-btn { width: 40px; height: 40px; font-size: 18px; }
+    .prev-btn { left: 6px; }
+    .next-btn { right: 6px; }
+    .slider-dot { width: 12px; height: 12px; }
+    .slider-dots { bottom: 10px; }
+    .page-header .slider-container { margin-top: 22px; }
 }

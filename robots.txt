@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Member-only areas — nothing here is useful in search results.
+Disallow: /blog.html
+Disallow: /login.html
+
+# NOTE: austin-hub.html and houston-hub.html are intentionally NOT listed here.
+# They carry <meta name="robots" content="noindex, nofollow"> instead. A
+# Disallow rule would stop crawlers from fetching the page at all, which means
+# they would never see the noindex tag and the URLs could still be listed.

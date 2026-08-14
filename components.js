@@ -11,9 +11,6 @@ export function loadComponents() {
     const isAbout = path.includes("about-us.html");
     const isCareers = path.includes("careers.html");
     const isContact = path.includes("#contact");
-    const isAustinHub = path.includes("austin-hub.html");
-    const isHoustonHub = path.includes("houston-hub.html");
-    const hubNavActive = isAustinHub || isHoustonHub;
     const isMemberHub = path.includes("blog.html");
     const loginNav = isLoginNavVisible();
 
@@ -33,19 +30,13 @@ export function loadComponents() {
         <ul class="nav-links" id="nav-links">
             <li><a href="index.html" class="${isHome ? 'active' : ''}">Home</a></li>
             
-            <li class="nav-dropdown ${isAbout || hubNavActive ? 'active' : ''}">
-                <div class="nav-about-row">
-                    <a href="about-us.html" class="nav-about-link ${isAbout ? 'active' : ''}">About Us</a>
-                    <button type="button" class="nav-dropdown-toggle" id="hub-dropdown-btn" aria-label="Show Austin and Houston hubs" aria-expanded="false" aria-haspopup="true" aria-controls="hub-dropdown-menu">
-                        <span class="dropdown-chevron" aria-hidden="true">▾</span>
-                    </button>
-                </div>
-                <ul class="nav-dropdown-menu" id="hub-dropdown-menu" role="menu">
-                    <li role="none"><a href="austin-hub.html" role="menuitem" class="${isAustinHub ? 'active' : ''}">Austin Hub</a></li>
-                    <li role="none"><a href="houston-hub.html" role="menuitem" class="${isHoustonHub ? 'active' : ''}">Houston Hub</a></li>
-                </ul>
-            </li>
-            
+            <!--
+                About Us is a single link for now. The Austin/Houston hub submenu was
+                removed along with public access to those pages (see hub-gate.js);
+                restore the .nav-dropdown markup here when the hub pages are updated.
+            -->
+            <li><a href="about-us.html" class="${isAbout ? 'active' : ''}">About Us</a></li>
+
             <li><a href="hope-events.html" class="${isHope ? 'active' : ''}">Hope Events</a></li>
             
             <li id="nav-careers" style="display: none;">
@@ -97,7 +88,6 @@ export function loadComponents() {
     if (footerElement) footerElement.innerHTML = footerHTML;
 
     initMobileMenu();
-    initHubDropdown();
     handleAuthStatus();
     applyAuthNavState(auth.currentUser);
     initLoginModal();
@@ -161,11 +151,6 @@ function initMobileMenu() {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('nav-active');
             hamburger.classList.toggle('toggle');
-            document.querySelectorAll('.nav-dropdown.open').forEach((el) => {
-                el.classList.remove('open');
-            });
-            const hubBtn = document.getElementById('hub-dropdown-btn');
-            if (hubBtn) hubBtn.setAttribute('aria-expanded', 'false');
         });
 
         navLinks.querySelectorAll('a').forEach((link) => {
@@ -175,33 +160,4 @@ function initMobileMenu() {
             });
         });
     }
-}
-
-function initHubDropdown() {
-    const dropdown = document.querySelector('.nav-dropdown');
-    const toggle = document.getElementById('hub-dropdown-btn');
-    if (!dropdown || !toggle) return;
-
-    const mq = window.matchMedia('(max-width: 768px)');
-
-    toggle.addEventListener('click', (e) => {
-        if (!mq.matches) return;
-        e.preventDefault();
-        e.stopPropagation();
-        const open = dropdown.classList.toggle('open');
-        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!mq.matches || !dropdown.classList.contains('open')) return;
-        if (!dropdown.contains(e.target)) {
-            dropdown.classList.remove('open');
-            toggle.setAttribute('aria-expanded', 'false');
-        }
-    });
-
-    mq.addEventListener('change', () => {
-        dropdown.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-    });
 }

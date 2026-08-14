@@ -1,19 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- class="is-gated" hides the page until hub-gate.js confirms a signed-in
+     member. Do not remove it without also removing the gate (see hub-gate.js). -->
+<html lang="en" class="is-gated">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="images/favicon-image.png" type="image/png">
     <title>Austin Hub | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-    
+
+    <script type="module" src="hub-gate.js"></script>
     <script type="module">
         import { loadComponents } from './components.js';
         document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 </head>
 <body>
+
+    <noscript>
+        <p style="visibility:visible;position:fixed;inset:0;margin:0;padding:60px 20px;background:#fff;text-align:center;font-family:sans-serif;">
+            This page requires JavaScript. <a href="index.html">Return to Snowdrop United</a>.
+        </p>
+    </noscript>
 
     <nav class="navbar" id="main-navbar"></nav>
 
@@ -35,10 +45,10 @@
             </div>
             
             <div class="image-content">
-                <div class="slider-container">
-                    <button class="slider-btn prev-btn">&#10094;</button>
+                <div class="slider-container" aria-label="Austin Hub event photos">
+                    <button type="button" class="slider-btn prev-btn" aria-label="Previous slide">&#10094;</button>
                     <div class="slider-track" id="austin-slider"></div>
-                    <button class="slider-btn next-btn">&#10095;</button>
+                    <button type="button" class="slider-btn next-btn" aria-label="Next slide">&#10095;</button>
                 </div>
             </div>
         </div>

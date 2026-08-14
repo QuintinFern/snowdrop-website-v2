@@ -2,184 +2,431 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Note: Mobile menu logic is now handled in components.js
 
-    // ================= IMAGE COUNTERS & CONFIGURATION =================
-    const config = {
-        mainEvents: 5,      
-        directors: 6,       
-        houstonHub: 7,      
-        austinHub: 6,
-        // NEW: Config for the header background sliders
-        // This assumes you have images named 'collage-about-us-1.jpg' through '4.jpg'
-        aboutHeader: 4,     
-        hopeHeader: 4       
+    const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const SLIDE_MS = 650;
+    const AUTOPLAY_MS = 5000;
+    const EASING = 'cubic-bezier(0.33, 1, 0.68, 1)';
+
+    // Filenames in /images are not consistently cased (some are .JPG). Static hosts
+    // like GitHub Pages are case-sensitive, so try each candidate before giving up.
+    const IMAGE_EXTENSIONS = ['.jpg', '.JPG', '.jpeg', '.png'];
+
+    // ================= PHOTO SLIDERS =================
+    // count must match the number of images actually present in /images,
+    // otherwise the slider ends up with blank slides.
+    const sliderSets = {
+        'event-slider': {
+            prefix: 'event-photo',
+            count: 8,
+            alt: (n) => `Snowdrop United volunteers at a hope event (photo ${n})`,
+        },
+        'about-header-slider': {
+            prefix: 'collage-about-us',
+            count: 3,
+            alt: (n) => `Snowdrop United team moment ${n}`,
+        },
+        'hope-header-slider': {
+            prefix: 'collage-hope-events',
+            count: 4,
+            alt: (n) => `Snowdrop United hope event ${n}`,
+        },
+        // No hub event photos have been uploaded yet, so these sliders stay empty
+        // and hide themselves instead of rendering broken images.
+        'houston-slider': {
+            prefix: 'houston-hub-event',
+            count: 0,
+            alt: (n) => `Houston Hub event ${n}`,
+        },
+        'austin-slider': {
+            prefix: 'austin-hub-event',
+            count: 0,
+            alt: (n) => `Austin Hub event ${n}`,
+        },
     };
 
-    // Specific titles for the directors
-    const directorTitles = [
-        "President",
-        "Vice President",
-        "Treasurer",
-        "Secretary",
-        "Director",
-        "Director"
-    ];
+    // ================= TEAM ROSTERS =================
+    const rosters = {
+        'directors-grid': {
+            prefix: 'director',
+            members: [
+                { name: 'Alexis Prevette', title: 'President' },
+                { name: 'Kishen Misra', title: 'Vice President' },
+                { name: 'Quintin Fernandez', title: 'Treasurer' },
+                { name: 'James L', title: 'Secretary' },
+                { name: 'Kevin Phan', title: 'Director' },
+                { name: 'Adam Vivas', title: 'Director' },
+            ],
+        },
+        'houston-hub-grid': {
+            prefix: 'houston-hub',
+            members: [
+                { name: 'Jay Mital', title: 'President' },
+                { name: 'Awais Jaffer', title: 'Vice President' },
+                { name: 'Rushil Vyas', title: 'Secretary' },
+                { name: 'Zhijun Gong', title: 'Community Outreach Director' },
+                { name: 'Mason Nguyen', title: 'Health and Safety Director' },
+                { name: 'Daphne Seraphim', title: 'Marketing Director' },
+                { name: 'Joseph Le', title: 'Fundraising Director' },
+            ],
+        },
+        'austin-hub-grid': {
+            prefix: 'austin-hub',
+            members: [
+                { name: 'Kishen Misra', title: 'President' },
+                { name: 'Kevin Phan', title: 'Vice President' },
+                { name: 'Ben Lansky', title: 'Financial Director' },
+                { name: 'Zuhair Kazi', title: 'Partnerships Director' },
+                { name: 'Giacomo Pietropaolo', title: 'Operations Director' },
+                { name: 'Ryan Skinner', title: 'Growth Director' },
+            ],
+        },
+    };
 
-	//Specific titles for Houston Hub
-const houstonHubTitles = [
-    "President",
-    "Vice President",
-    "Secretary",
-    "Community Outreach Director",
-    "Health and Safety Director",
-    "Marketing Director",
-    "Fundraising Director"
-];
+    // ================= IMAGE LOADING =================
+    /**
+     * Point an <img> at images/<base><ext>, walking through the extension
+     * candidates on failure. Resolves true when a file loads, false when none do.
+     */
+    function resolveImage(img, base) {
+        return new Promise((resolve) => {
+            let attempt = 0;
 
-// Names for Board of Directors
-const directorNames = [
-    "Alexis Prevette", // President
-    "Kishen Misra",    // Vice President
-    "Quintin Fernandez",  // Treasurer
-    "James L",  // Secretary
-    "Kevin Phan", // Replace with actual
-    "Adam Vivas"  // Replace with actual
-];
-
-// Names for Houston Hub
-const houstonHubNames = [
-    "Jay Mital",       // President
-    "Awais Jaffer",      // Vice President
-    "Rushil Vyas",  // Secretary
-    "Zhijun Gong", // Community Outreach Director
-    "Mason Nguyen",    // Health and Safety Director
-    "Daphne Seraphim",          // Marketing Director
-    "Joseph Le"         // Fundraising Director
-];
-
-const austinHubNames = [
-	"Kishen Misra",
-	"Kevin Phan",
-	"Ben Lansky",
-	"Zuhair Kazi",
-	"Giacomo Pietropaolo",
-	"Ryan Skinner"
-];
-
-const austinHubTitles = [
-    "President",
-    "Vice President",
-    "Financial Director",
-    "Partnerships Director",
-    "Operations Director",
-	"Growth Director"
-];
-
-    // ================= IMAGE LOADER FUNCTION =================
-    function loadImages(containerId, count, prefix, isSlider = false, namesArray = [], titlesArray = []) {
-        const container = document.getElementById(containerId);
-        if (!container) return; // Exit if element doesn't exist
-
-        for (let i = 1; i <= count; i++) {
-            const wrapper = document.createElement('div');
-            wrapper.className = isSlider ? 'slide' : 'director-card';
-
-            const img = document.createElement('img');
-            img.src = `images/${prefix}-${i}.jpg`;
-            img.alt = `${prefix.replace(/-/g, ' ')} ${i}`;
-
-            // Fallback if image is missing
-            img.onerror = function() {
-                if (isSlider) this.parentElement.style.display = 'none';
-                else this.src = 'images/logo-primary.png';
+            const tryNext = () => {
+                if (attempt >= IMAGE_EXTENSIONS.length) {
+                    resolve(false);
+                    return;
+                }
+                img.src = `images/${base}${IMAGE_EXTENSIONS[attempt++]}`;
             };
 
-            wrapper.appendChild(img);
+            img.addEventListener('load', () => resolve(true), { once: true });
+            img.addEventListener('error', tryNext);
+            tryNext();
+        });
+    }
 
-            // Add name and title for directors/Houston Hub
-            if (prefix === 'director' || prefix === 'houston-hub' || prefix === 'austin-hub') {
-                const name = document.createElement('h3');
-                name.textContent = namesArray[i - 1] || "Member";
+    function buildSlides(trackId, set) {
+        const track = document.getElementById(trackId);
+        if (!track) return Promise.resolve();
 
-                const title = document.createElement('p');
-                title.textContent = titlesArray[i - 1] || "Member";
-                title.style.color = "#2a80a6";
-                title.style.fontWeight = "bold";
+        const pending = [];
 
-    wrapper.appendChild(name);
-    wrapper.appendChild(title);
-}
+        for (let i = 1; i <= set.count; i++) {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
 
-            container.appendChild(wrapper);
+            const img = document.createElement('img');
+            img.alt = set.alt ? set.alt(i) : `${set.prefix.replace(/-/g, ' ')} ${i}`;
+            img.decoding = 'async';
+            // Deliberately not lazy: the slider has to know which files exist
+            // before it can lay itself out, and lazy images inside an
+            // overflow:hidden track may never fire load/error.
+
+            slide.appendChild(img);
+            track.appendChild(slide);
+
+            // Drop the slide entirely if no file exists — a hidden-but-present
+            // slide throws off the track's translate math.
+            pending.push(
+                resolveImage(img, `${set.prefix}-${i}`).then((ok) => {
+                    if (!ok) slide.remove();
+                })
+            );
         }
+
+        return Promise.all(pending);
     }
 
-    // ================= INITIALIZE SECTIONS =================
-    // Load existing sections
-    loadImages('event-slider', config.mainEvents, 'event-photo', true);
-    loadImages('directors-grid', config.directors, 'director', false, directorNames, directorTitles);
-    loadImages('houston-hub-grid', config.houstonHub, 'houston-hub', false, houstonHubNames, houstonHubTitles);
-	loadImages('austin-hub-grid', config.austinHub, 'austin-hub', false, austinHubNames, austinHubTitles);
-    loadImages('houston-slider', config.houstonHub, 'houston-hub-event', true);
-    loadImages('austin-slider', config.austinHub, 'austin-hub-event', true);
-	
+    function buildRoster(gridId, roster) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
 
+        roster.members.forEach((member, idx) => {
+            const card = document.createElement('div');
+            card.className = 'director-card';
 
-    // NEW: Load images for the new header backgrounds
-    // This uses your existing collage images (collage-about-us-1.jpg, etc.)
-    loadImages('about-header-slider', config.aboutHeader, 'collage-about-us', true);
-    loadImages('hope-header-slider', config.hopeHeader, 'collage-hope-events', true);
+            const img = document.createElement('img');
+            img.alt = `${member.name}, ${member.title}`;
+            img.decoding = 'async';
+            img.loading = 'lazy';
 
+            const name = document.createElement('h3');
+            name.textContent = member.name;
 
- // ================= SMOOTH INFINITE SLIDER LOGIC =================
-const sliders = document.querySelectorAll('.slider-container');
+            const title = document.createElement('p');
+            title.className = 'director-title';
+            title.textContent = member.title;
 
-sliders.forEach(slider => {
-    const track = slider.querySelector('.slider-track');
-    const nextBtn = slider.querySelector('.next-btn');
-    const prevBtn = slider.querySelector('.prev-btn');
+            card.append(img, name, title);
+            grid.appendChild(card);
 
-    if (!track || track.children.length === 0) return;
-
-    let slides = Array.from(track.children);
-    let currentIndex = 0;
-
-    // Clone first slide and append it
-    const firstClone = slides[0].cloneNode(true);
-    track.appendChild(firstClone);
-
-    slides = Array.from(track.children);
-
-    function updateSlide() {
-        track.style.transition = "transform 0.65s cubic-bezier(0.33, 1, 0.68, 1)";
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            resolveImage(img, `${roster.prefix}-${idx + 1}`).then((ok) => {
+                if (ok) return;
+                // Keep the card (the person is still on the team) but show the
+                // logo as a contained placeholder rather than a cropped fill.
+                img.classList.add('is-placeholder');
+                img.src = 'images/logo-primary.png';
+                img.alt = `${member.name}, ${member.title} — photo coming soon`;
+            });
+        });
     }
 
-    function nextSlide() {
-        currentIndex++;
-        updateSlide();
+    // ================= SLIDER =================
+    function createSlider(container) {
+        const track = container.querySelector('.slider-track');
+        if (!track) return;
+
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+
+        let index = 0;
+        let animating = false;
+        let autoTimer = null;
+        let settleTimer = null;
+        let paused = false;
+        let dots = [];
+
+        const realSlides = () =>
+            Array.from(track.children).filter((el) => el.dataset.clone !== '1');
+
+        function setTransform(animate) {
+            track.style.transition = animate
+                ? `transform ${SLIDE_MS}ms ${EASING}`
+                : 'none';
+            track.style.transform = `translateX(-${index * 100}%)`;
+            if (!animate) {
+                // Flush the jump so the next animated move actually transitions.
+                void track.offsetHeight;
+            }
+        }
+
+        function syncDots() {
+            if (!dots.length) return;
+            const count = dots.length;
+            const active = index % count;
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('is-active', i === active);
+                dot.setAttribute('aria-current', i === active ? 'true' : 'false');
+            });
+        }
+
+        function goTo(target, animate) {
+            index = target;
+            setTransform(animate && !REDUCED_MOTION);
+            syncDots();
+
+            clearTimeout(settleTimer);
+            if (animate && !REDUCED_MOTION) {
+                animating = true;
+                // transitionend does not fire in background tabs or when the
+                // transform is unchanged — this guarantees we unlock.
+                settleTimer = setTimeout(onSettled, SLIDE_MS + 120);
+            } else {
+                animating = false;
+            }
+        }
+
+        function onSettled() {
+            clearTimeout(settleTimer);
+            animating = false;
+            // Landed on the trailing clone: snap back to the real first slide.
+            const last = track.children.length - 1;
+            if (last > 0 && track.children[last]?.dataset.clone === '1' && index >= last) {
+                index = 0;
+                setTransform(false);
+                syncDots();
+            }
+        }
+
+        function next() {
+            if (animating) return;
+            if (realSlides().length < 2) return;
+            goTo(index + 1, true);
+        }
+
+        function prev() {
+            if (animating) return;
+            const count = realSlides().length;
+            if (count < 2) return;
+            if (index === 0) {
+                // Hop to the clone (visually identical to slide 1), then animate
+                // backwards onto the real last slide.
+                goTo(count, false);
+                requestAnimationFrame(() => goTo(count - 1, true));
+                return;
+            }
+            goTo(index - 1, true);
+        }
+
+        function stopAuto() {
+            clearInterval(autoTimer);
+            autoTimer = null;
+        }
+
+        function startAuto() {
+            stopAuto();
+            if (paused || REDUCED_MOTION) return;
+            if (realSlides().length < 2) return;
+            autoTimer = setInterval(() => {
+                if (document.hidden) return;
+                next();
+            }, AUTOPLAY_MS);
+        }
+
+        function nudge(fn) {
+            fn();
+            startAuto(); // don't advance again immediately after a manual move
+        }
+
+        function buildDots(count) {
+            const existing = container.querySelector('.slider-dots');
+            if (existing) existing.remove();
+            dots = [];
+            if (count < 2) return;
+
+            const nav = document.createElement('div');
+            nav.className = 'slider-dots';
+
+            for (let i = 0; i < count; i++) {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'slider-dot';
+                dot.setAttribute('aria-label', `Go to slide ${i + 1} of ${count}`);
+                dot.addEventListener('click', () => {
+                    if (animating || index === i) return;
+                    nudge(() => goTo(i, true));
+                });
+                nav.appendChild(dot);
+                dots.push(dot);
+            }
+
+            container.appendChild(nav);
+        }
+
+        function refresh() {
+            stopAuto();
+            clearTimeout(settleTimer);
+            animating = false;
+
+            track.querySelectorAll('[data-clone="1"]').forEach((el) => el.remove());
+            const slides = realSlides();
+
+            container.hidden = slides.length === 0;
+            const multi = slides.length > 1;
+
+            if (prevBtn) prevBtn.hidden = !multi;
+            if (nextBtn) nextBtn.hidden = !multi;
+
+            if (multi) {
+                const clone = slides[0].cloneNode(true);
+                clone.dataset.clone = '1';
+                clone.setAttribute('aria-hidden', 'true');
+                track.appendChild(clone);
+            }
+
+            buildDots(slides.length);
+            index = 0;
+            setTransform(false);
+            syncDots();
+            startAuto();
+        }
+
+        track.addEventListener('transitionend', (e) => {
+            if (e.target !== track || e.propertyName !== 'transform') return;
+            onSettled();
+        });
+
+        if (nextBtn) nextBtn.addEventListener('click', () => nudge(next));
+        if (prevBtn) prevBtn.addEventListener('click', () => nudge(prev));
+
+        container.addEventListener('mouseenter', () => {
+            paused = true;
+            stopAuto();
+        });
+        container.addEventListener('mouseleave', () => {
+            paused = false;
+            startAuto();
+        });
+        container.addEventListener('focusin', () => {
+            paused = true;
+            stopAuto();
+        });
+        container.addEventListener('focusout', (e) => {
+            if (container.contains(e.relatedTarget)) return;
+            paused = false;
+            startAuto();
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopAuto();
+            else startAuto();
+        });
+
+        container.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                nudge(next);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                nudge(prev);
+            }
+        });
+
+        // Swipe on touch devices
+        let touchStartX = null;
+        track.addEventListener(
+            'touchstart',
+            (e) => {
+                touchStartX = e.changedTouches[0].clientX;
+                stopAuto();
+            },
+            { passive: true }
+        );
+        track.addEventListener(
+            'touchend',
+            (e) => {
+                if (touchStartX === null) return;
+                const delta = e.changedTouches[0].clientX - touchStartX;
+                touchStartX = null;
+                if (Math.abs(delta) > 45) nudge(delta < 0 ? next : prev);
+                else startAuto();
+            },
+            { passive: true }
+        );
+
+        container.setAttribute('role', 'group');
+        container.setAttribute('aria-roledescription', 'carousel');
+
+        refresh();
+        return { refresh };
     }
 
-    function prevSlide() {
-        if (currentIndex === 0) return;
-        currentIndex--;
-        updateSlide();
-    }
+    // ================= INITIALIZE =================
+    Object.entries(rosters).forEach(([gridId, roster]) => buildRoster(gridId, roster));
 
-    // When transition ends, reset if we're on clone
-    track.addEventListener('transitionend', () => {
-        if (currentIndex === slides.length - 1) {
-            track.style.transition = "none";
-            currentIndex = 0;
-            track.style.transform = `translateX(0%)`;
+    const sliderBuilds = Object.entries(sliderSets).map(([trackId, set]) =>
+        buildSlides(trackId, set)
+    );
+
+    // Wait for the images to resolve (or fail) so the slider never counts a
+    // slide that is about to be removed. Cap the wait so a stalled request
+    // cannot leave the sliders dead.
+    const allSettled = Promise.all(sliderBuilds);
+    const ready = Promise.race([
+        allSettled.then(() => 'settled'),
+        new Promise((resolve) => setTimeout(() => resolve('timeout'), 4000)),
+    ]);
+
+    ready.then((how) => {
+        const instances = [];
+        document.querySelectorAll('.slider-container').forEach((container) => {
+            const instance = createSlider(container);
+            if (instance) instances.push(instance);
+        });
+
+        // Started early because an image stalled: re-measure once it lands.
+        if (how === 'timeout') {
+            allSettled.then(() => instances.forEach((instance) => instance.refresh()));
         }
     });
-
-    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-
-    // Auto-play
-    setInterval(() => {
-        nextSlide();
-    }, 5000);
-});
 });
