@@ -1,55 +1,80 @@
-/* Member Hub (post-login) — Snowdrop United */
+/* Member Hub (post-login) — Snowdrop United
+   ---------------------------------------------------------------------------
+   Loads after style.css and reuses that sheet's OpenSwiftUI-derived tokens
+   (label/fill hierarchies, separator, grouped backgrounds, continuous radii,
+   critically-damped motion). The --hub-* names are kept as aliases so the
+   markup and member-hub.js need no changes. */
+
 :root {
-    --hub-bg: #f0f4f8;
-    --hub-card: #ffffff;
-    --hub-border: #e2e8f0;
-    --hub-text: #1e293b;
-    --hub-muted: #64748b;
-    --hub-accent: #2a80a6;
-    --hub-accent-dark: #1f607d;
+    --hub-bg: var(--bg-grouped);
+    --hub-card: var(--bg-elevated);
+    --hub-border: var(--separator-hairline);
+    --hub-text: var(--label);
+    --hub-muted: var(--label-secondary);
+    --hub-accent: var(--tint);
+    --hub-accent-dark: var(--tint-pressed);
+    --hub-inset: #fafbfc;
+}
+
+@supports (corner-shape: squircle) {
+    .hub-hero,
+    .hub-card,
+    .hub-post,
+    .hub-group-card,
+    .hub-map-wrap,
+    .hub-btn,
+    .hub-field input,
+    .hub-field textarea,
+    .hub-field select,
+    .hub-cal-cell,
+    .hub-toast {
+        corner-shape: squircle;
+    }
 }
 
 .hub-page {
     background: var(--hub-bg);
     min-height: calc(100vh - 60px);
-    padding-bottom: 48px;
+    padding-bottom: var(--space-12);
 }
 
 .hub-wrap {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 24px 20px 0;
+    padding: var(--space-6) var(--space-5) 0;
 }
 
 .hub-hero {
     background: linear-gradient(135deg, var(--hub-accent) 0%, #1a5f7a 100%);
-    color: #fff;
-    border-radius: 16px;
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    box-shadow: 0 12px 40px rgba(42, 128, 166, 0.25);
+    color: var(--on-tint);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-tint);
 }
 
 .hub-hero h1 {
-    margin: 0 0 6px;
-    font-family: var(--font-heading, 'Work Sans', sans-serif);
-    font-size: 1.75rem;
-    font-weight: 700;
+    margin: 0 0 var(--space-2);
+    color: var(--on-tint);
+    font-family: var(--font-heading);
+    font-size: var(--text-title);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-title);
 }
 
 .hub-hero p {
     margin: 0;
-    opacity: 0.92;
-    font-size: 1rem;
+    color: var(--on-tint-secondary);
+    font-size: var(--text-callout);
 }
 
 .hub-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--hub-border);
-    padding-bottom: 4px;
+    gap: var(--space-1);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--separator-hairline);
+    padding-bottom: var(--space-2);
 }
 
 .hub-tab {
@@ -57,29 +82,30 @@
     border: none;
     background: transparent;
     color: var(--hub-muted);
-    font-family: var(--font-body, 'Poppins', sans-serif);
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 10px 16px;
-    border-radius: 10px 10px 0 0;
+    font-family: var(--font-body);
+    font-size: var(--text-subheadline);
+    font-weight: var(--weight-semibold);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-s);
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background-color var(--motion-interactive) var(--ease-spring),
+                color var(--motion-interactive) var(--ease-spring);
 }
 
 .hub-tab:hover {
-    color: var(--hub-accent);
-    background: rgba(42, 128, 166, 0.08);
+    color: var(--label);
+    background: var(--fill-quaternary);
 }
 
 .hub-tab.is-active {
-    background: var(--hub-card);
+    background: var(--tint-fill);
     color: var(--hub-accent);
-    box-shadow: 0 -2px 0 var(--hub-accent) inset;
+    box-shadow: none;
 }
 
 .hub-panel {
     display: none;
-    animation: hubFade 0.25s ease;
+    animation: hubFade var(--motion-snappy) var(--ease-spring);
 }
 
 .hub-panel.is-active {
@@ -91,81 +117,135 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .hub-panel { animation: none; }
+}
+
 .hub-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: var(--space-6);
     align-items: start;
+}
+
+/* Paired inputs inside a card (lat/lng) stay side by side at any width. */
+.hub-grid-2--tight {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
 }
 
 @media (max-width: 900px) {
     .hub-grid-2 {
         grid-template-columns: 1fr;
     }
+    .hub-grid-2--tight {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 .hub-card {
     background: var(--hub-card);
     border: 1px solid var(--hub-border);
-    border-radius: 14px;
-    padding: 22px;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    border-radius: var(--radius-l);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-1);
+    /* Reset the marketing-page .hub-card treatment from style.css */
+    text-align: left;
+    display: block;
+    overflow: visible;
+    transform: none;
 }
 
+.hub-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-1);
+}
+
+.hub-card--narrow { max-width: 640px; }
+.hub-card--wide { max-width: 720px; }
+
 .hub-card h2 {
-    margin: 0 0 16px;
-    font-size: 1.25rem;
-    color: var(--hub-accent);
-    font-family: var(--font-heading, 'Work Sans', sans-serif);
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-title3);
+    font-weight: var(--weight-semibold);
+    color: var(--label);
+    font-family: var(--font-heading);
+}
+
+/* Explanatory line under a card heading. */
+.hub-note {
+    color: var(--hub-muted);
+    font-size: var(--text-subheadline);
+    margin: 0 0 var(--space-4);
 }
 
 .hub-field {
-    margin-bottom: 14px;
+    margin-bottom: var(--space-4);
 }
 
 .hub-field label {
     display: block;
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-size: var(--text-footnote);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     color: var(--hub-muted);
-    margin-bottom: 6px;
+    margin-bottom: var(--space-2);
 }
 
 .hub-field input,
 .hub-field textarea,
 .hub-field select {
     width: 100%;
-    box-sizing: border-box;
-    padding: 10px 12px;
-    border: 1px solid var(--hub-border);
-    border-radius: 8px;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--separator-hairline);
+    background: var(--fill-quaternary);
+    border-radius: var(--radius-s);
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: var(--text-callout);
+    color: var(--text-color);
+    transition: border-color var(--motion-interactive) var(--ease-spring),
+                background-color var(--motion-interactive) var(--ease-spring);
 }
 
+.hub-field input:focus,
+.hub-field textarea:focus,
+.hub-field select:focus {
+    background: var(--bg-elevated);
+    border-color: var(--hub-accent);
+}
+
+.hub-field input::placeholder,
+.hub-field textarea::placeholder { color: var(--label-tertiary); }
+
 .hub-field textarea {
-    min-height: 100px;
+    min-height: 110px;
     resize: vertical;
+    line-height: var(--leading-body);
 }
 
 .hub-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid transparent;
+    border-radius: var(--radius-m);
+    font-weight: var(--weight-semibold);
     font-family: inherit;
-    font-size: 0.92rem;
+    font-size: var(--text-subheadline);
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: background-color var(--motion-interactive) var(--ease-spring),
+                color var(--motion-interactive) var(--ease-spring),
+                transform var(--motion-interactive) var(--ease-spring);
 }
+
+.hub-btn:active { transform: scale(0.97); }
 
 .hub-btn--primary {
     background: var(--hub-accent);
-    color: #fff;
+    color: var(--white);
 }
 
 .hub-btn--primary:hover {
@@ -175,101 +255,121 @@
 .hub-btn--ghost {
     background: transparent;
     color: var(--hub-accent);
-    border: 2px solid var(--hub-accent);
+    border-color: var(--hub-accent);
 }
 
 .hub-btn--ghost:hover {
-    background: rgba(42, 128, 166, 0.08);
+    background: var(--tint-fill);
 }
 
 .hub-btn--danger {
-    background: #dc2626;
-    color: #fff;
+    background: var(--system-red);
+    color: var(--white);
 }
 
 .hub-btn--danger:hover {
-    background: #b91c1c;
+    background: var(--system-red-dark);
 }
 
 .hub-btn-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 8px;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
 }
 
 .hub-post-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-top: 8px;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
 }
 
 .hub-post {
     border: 1px solid var(--hub-border);
-    border-radius: 12px;
-    padding: 18px;
-    background: #fafbfc;
+    border-radius: var(--radius-m);
+    padding: var(--space-5);
+    background: var(--hub-inset);
 }
 
 .hub-post h3 {
-    margin: 0 0 8px;
-    font-size: 1.1rem;
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-headline);
+    font-weight: var(--weight-semibold);
     color: var(--hub-text);
 }
 
 .hub-post-meta {
-    font-size: 0.78rem;
+    font-size: var(--text-caption);
     color: var(--hub-muted);
-    margin-bottom: 10px;
+    margin-bottom: var(--space-3);
+    letter-spacing: var(--tracking-caption);
 }
 
 .hub-post-body {
     margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.65;
-    color: var(--hub-text);
+    font-size: var(--text-subheadline);
+    line-height: var(--leading-body);
+    color: var(--label-secondary);
     white-space: pre-wrap;
 }
 
 .hub-empty {
     text-align: center;
-    padding: 32px 16px;
-    color: var(--hub-muted);
-    font-size: 0.95rem;
+    padding: var(--space-8) var(--space-4);
+    color: var(--label-tertiary);
+    font-size: var(--text-subheadline);
+}
+
+/* Empty state standing in for a list row. */
+.hub-empty--row {
+    border: none;
+    padding: var(--space-4);
 }
 
 .hub-groups-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    gap: var(--space-4);
 }
 
 .hub-group-card {
     border: 1px solid var(--hub-border);
-    border-radius: 12px;
-    padding: 16px;
-    background: #fafbfc;
+    border-radius: var(--radius-m);
+    padding: var(--space-4);
+    background: var(--hub-inset);
 }
 
 .hub-group-card h3 {
-    margin: 0 0 8px;
-    font-size: 1.05rem;
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-headline);
+    font-weight: var(--weight-semibold);
 }
 
 .hub-group-card p {
-    margin: 0 0 12px;
-    font-size: 0.88rem;
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-footnote);
     color: var(--hub-muted);
-    line-height: 1.5;
+    line-height: var(--leading-body);
 }
+
+.hub-group-count {
+    font-size: var(--text-caption);
+    color: var(--label-tertiary);
+    letter-spacing: var(--tracking-caption);
+}
+
+/* Compact variant of .hub-post used for calendar event rows. */
+.hub-post--event { margin-bottom: var(--space-3); }
+.hub-post--event h3 { font-size: var(--text-subheadline); }
+.hub-post--event .hub-post-body { font-size: var(--text-footnote); }
 
 .hub-map-wrap {
     height: 420px;
-    border-radius: 12px;
+    border-radius: var(--radius-m);
     overflow: hidden;
     border: 1px solid var(--hub-border);
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
 }
 
 .hub-map-wrap .leaflet-container {
@@ -278,26 +378,29 @@
 
 .hub-file-list {
     list-style: none;
-    margin: 12px 0 0;
+    margin: var(--space-3) 0 0;
     padding: 0;
 }
+
+.hub-file-list--spaced { margin-top: var(--space-5); }
 
 .hub-file-list li {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     border: 1px solid var(--hub-border);
-    border-radius: 10px;
-    margin-bottom: 10px;
-    background: #fafbfc;
+    border-radius: var(--radius-s);
+    margin-bottom: var(--space-3);
+    background: var(--hub-inset);
     flex-wrap: wrap;
 }
 
 .hub-file-list a {
     color: var(--hub-accent);
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-subheadline);
     word-break: break-all;
 }
 
@@ -305,33 +408,36 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
     flex-wrap: wrap;
 }
 
 .hub-cal-head h3 {
     margin: 0;
-    font-size: 1.15rem;
+    font-size: var(--text-headline);
+    font-weight: var(--weight-semibold);
     color: var(--hub-text);
 }
 
 .hub-cal-dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-bottom: 20px;
-    font-size: 0.75rem;
+    gap: var(--space-1);
+    margin-bottom: var(--space-5);
+    font-size: var(--text-caption2);
     text-align: center;
-    color: var(--hub-muted);
-    font-weight: 600;
+    color: var(--label-tertiary);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-caption);
+    text-transform: uppercase;
 }
 
 .hub-cal-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin-bottom: 24px;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
 }
 
 .hub-cal-cell {
@@ -340,13 +446,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    font-weight: 600;
+    border-radius: var(--radius-s);
+    font-size: var(--text-footnote);
+    font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
     color: var(--hub-text);
     background: var(--hub-card);
     border: 1px solid var(--hub-border);
     cursor: default;
+    transition: background-color var(--motion-interactive) var(--ease-spring);
 }
 
 .hub-cal-cell--muted {
@@ -361,8 +469,13 @@
 }
 
 .hub-cal-cell--has-event {
-    background: rgba(42, 128, 166, 0.15);
+    background: var(--tint-fill-strong);
     cursor: pointer;
+}
+
+.hub-cal-cell--has-event:hover {
+    background: var(--tint-fill-strong);
+    filter: brightness(0.97);
 }
 
 .hub-cal-cell--selected {
@@ -371,26 +484,36 @@
 }
 
 .hub-event-list h4 {
-    margin: 0 0 10px;
-    font-size: 1rem;
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-subheadline);
+    font-weight: var(--weight-semibold);
     color: var(--hub-accent);
 }
 
 .hub-toast {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    max-width: 320px;
-    padding: 14px 18px;
-    background: var(--hub-text);
-    color: #fff;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    bottom: var(--space-6);
+    right: var(--space-6);
+    max-width: 340px;
+    padding: var(--space-4) var(--space-5);
+    background: rgba(28, 28, 30, 0.9);
+    -webkit-backdrop-filter: var(--material-blur-thin);
+    backdrop-filter: var(--material-blur-thin);
+    color: var(--white);
+    border-radius: var(--radius-m);
+    font-size: var(--text-subheadline);
+    box-shadow: var(--shadow-3);
     z-index: 10000;
-    animation: hubFade 0.3s ease;
+    animation: hubFade var(--motion-snappy) var(--ease-spring);
 }
 
 .hub-toast--err {
-    background: #b91c1c;
+    background: rgba(215, 0, 21, 0.92);
+}
+
+@media (max-width: 768px) {
+    .hub-wrap { padding: var(--space-4) var(--space-4) 0; }
+    .hub-hero { padding: var(--space-6); }
+    .hub-card { padding: var(--space-5); }
+    .hub-toast { left: var(--space-4); right: var(--space-4); max-width: none; }
 }

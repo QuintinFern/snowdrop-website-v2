@@ -189,7 +189,7 @@ function initGroups() {
                 card.innerHTML = `
                     <h3>${escapeHtml(g.name || 'Group')}</h3>
                     <p>${escapeHtml(g.description || '')}</p>
-                    <p style="font-size:0.8rem;color:var(--hub-muted);">${members.length} member(s)</p>
+                    <p class="hub-group-count">${members.length} member(s)</p>
                 `;
                 const row = document.createElement('div');
                 row.className = 'hub-btn-row';
@@ -276,7 +276,7 @@ function initFiles() {
     onSnapshot(q, (snap) => {
         list.innerHTML = '';
         if (snap.empty) {
-            list.innerHTML = '<li class="hub-empty" style="border:none;padding:16px">No files uploaded yet.</li>';
+            list.innerHTML = '<li class="hub-empty hub-empty--row">No files uploaded yet.</li>';
             return;
         }
         snap.forEach((d) => {
@@ -534,10 +534,10 @@ function renderEventListForSelection() {
         container.innerHTML = filtered
             .map(
                 (ev) => `
-            <div class="hub-post" style="margin-bottom:10px">
-                <h3 style="font-size:1rem">${escapeHtml(ev.title)}</h3>
+            <div class="hub-post hub-post--event">
+                <h3>${escapeHtml(ev.title)}</h3>
                 <div class="hub-post-meta">${ev.eventDate?.toDate?.().toLocaleString?.() || ''}</div>
-                <p class="hub-post-body" style="font-size:0.9rem">${escapeHtml(ev.notes || '')}</p>
+                <p class="hub-post-body">${escapeHtml(ev.notes || '')}</p>
             </div>
         `
             )
@@ -555,10 +555,10 @@ function renderEventListForSelection() {
             .slice(0, 12)
             .map(
                 (ev) => `
-            <div class="hub-post" style="margin-bottom:10px">
-                <h3 style="font-size:1rem">${escapeHtml(ev.title)}</h3>
+            <div class="hub-post hub-post--event">
+                <h3>${escapeHtml(ev.title)}</h3>
                 <div class="hub-post-meta">${ev.eventDate?.toDate?.().toLocaleString?.() || ''}</div>
-                <p class="hub-post-body" style="font-size:0.9rem">${escapeHtml(ev.notes || '')}</p>
+                <p class="hub-post-body">${escapeHtml(ev.notes || '')}</p>
             </div>
         `
             )

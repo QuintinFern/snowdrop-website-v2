@@ -50,7 +50,7 @@ export function loadComponents() {
             <li><a href="#main-footer" class="${isContact ? 'active' : ''}">Contact</a></li>
             
             <li id="nav-auth-item" style="${loginNav ? '' : 'display: none;'}">
-                ${loginNav ? `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>` : ''}
+                ${loginNav ? `<a href="login.html" class="nav-auth-link">Login</a>` : ''}
             </li>
             
             <li><a href="https://square.link/u/DPaykecu" class="btn-nav">Donate</a></li>
@@ -115,7 +115,7 @@ function applyAuthNavState(user) {
         if (memberHubLink) memberHubLink.style.display = '';
         if (authItem) {
             authItem.style.display = '';
-            authItem.innerHTML = `<button id="btn-logout" type="button" style="background:none;border:none;color:#2a80a6;font-weight:600;font-family:inherit;font-size:1rem;cursor:pointer;">Logout</button>`;
+            authItem.innerHTML = `<button id="btn-logout" type="button" class="nav-logout-btn">Logout</button>`;
             const btn = document.getElementById('btn-logout');
             if (btn) {
                 btn.addEventListener('click', () => {
@@ -130,7 +130,7 @@ function applyAuthNavState(user) {
         if (memberHubLink) memberHubLink.style.display = 'none';
         if (authItem) {
             authItem.style.display = '';
-            authItem.innerHTML = `<a href="login.html" style="color: #2a80a6; font-weight: 600;">Login</a>`;
+            authItem.innerHTML = `<a href="login.html" class="nav-auth-link">Login</a>`;
         }
     }
 }

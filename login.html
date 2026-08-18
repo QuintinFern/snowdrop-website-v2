@@ -7,14 +7,8 @@
     <title>Login | Snowdrop United</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Work+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Hide form until auth-flags confirms login is enabled (avoids flash before redirect) */
-        html:not(.login-ready) .auth-container { visibility: hidden; }
-        .auth-container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
-        .auth-container input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; }
-        .toggle-link { color: #2a80a6; cursor: pointer; font-size: 0.9rem; margin-top: 15px; display: block; text-decoration: underline; }
-        .error-msg { color: red; font-size: 0.9rem; margin-bottom: 10px; display: none; }
-    </style>
+    <!-- .auth-container / .toggle-link / .error-msg live in style.css, including the
+         html:not(.login-ready) rule that hides the form until auth-flags runs. -->
     <script type="module">
         import { isLoginNavVisible } from './auth-flags.js';
         import { loadComponents } from './components.js';
@@ -39,7 +33,7 @@
         <input type="email" id="email" placeholder="Email Address" required>
         <input type="password" id="password" placeholder="Password" required>
         
-        <button class="btn-primary" id="auth-btn" style="width: 100%;">Log In</button>
+        <button class="btn-primary btn-block" id="auth-btn">Log In</button>
         
         <span class="toggle-link" id="toggle-auth">Don't have an account? Sign Up</span>
     </div>
