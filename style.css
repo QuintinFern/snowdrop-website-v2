@@ -648,7 +648,10 @@ select:focus-visible,
 
 .btn-email:hover {
     box-shadow: var(--shadow-2);
-    transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn-email:hover { transform: translateY(-2px); }
 }
 
 .btn-block { width: 100%; }
@@ -816,9 +819,13 @@ select:focus-visible,
                 box-shadow var(--motion-snappy) var(--ease-spring);
 }
 
-.stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-2);
+/* Gated: on a touch screen a tap fires a hover the browser never clears, which
+   left cards stuck in the lifted state until you tapped somewhere else. */
+@media (hover: hover) and (pointer: fine) {
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-2);
+    }
 }
 
 .stat-icon { font-size: 34px; margin-bottom: var(--space-3); }
@@ -1078,9 +1085,11 @@ select:focus-visible,
     flex-direction: column;
 }
 
-.hub-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-2);
+@media (hover: hover) and (pointer: fine) {
+    .hub-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-2);
+    }
 }
 
 .hub-card-img-top {
@@ -1144,9 +1153,24 @@ select:focus-visible,
     transition: transform var(--motion-default) var(--ease-fluid);
     width: 100%;
     will-change: transform;
+    /* The track owns horizontal gestures; the page keeps vertical ones. */
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
+.slider-track.is-dragging { cursor: grabbing; }
+
 .slide { min-width: 100%; flex: 0 0 100%; }
+
+/* Otherwise a mouse drag starts a native image drag and sticks a ghost
+   thumbnail to the cursor. */
+.slide img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
 
 .slide img {
     width: 100%;
@@ -1215,6 +1239,11 @@ select:focus-visible,
 .slider-dot.is-active { background: var(--white); transform: scale(1.5); }
 .slider-dot:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 
+/* The dots were the one control with no press feedback. Scaling up rather than
+   down, because an 8px target shrinking reads as the dot vanishing. */
+.slider-dot:active { transform: scale(1.35); }
+.slider-dot.is-active:active { transform: scale(1.65); }
+
 /* ============================================================================
    DIRECTORS
    ========================================================================= */
@@ -1237,9 +1266,11 @@ select:focus-visible,
                 box-shadow var(--motion-snappy) var(--ease-spring);
 }
 
-.director-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-2);
+@media (hover: hover) and (pointer: fine) {
+    .director-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-2);
+    }
 }
 
 .director-card img {
@@ -1459,7 +1490,9 @@ select:focus-visible,
                 box-shadow var(--motion-snappy) var(--ease-spring);
 }
 
-.job-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+@media (hover: hover) and (pointer: fine) {
+    .job-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+}
 
 .job-card h3 {
     margin: 0 0 var(--space-2);
@@ -1643,6 +1676,40 @@ html:not(.login-ready) .auth-container { visibility: hidden; }
 }
 
 .message-input-container .btn-primary { margin-top: 0; }
+
+/* ============================================================================
+   SCROLL REVEAL
+
+   Applied and removed entirely by app.js (initScrollReveal). Nothing here is
+   ever the page's resting state: if the script fails, never runs, or the
+   browser has no IntersectionObserver, `.reveal` is simply never added and the
+   content renders normally. app.js also strips both classes once an element has
+   landed, so this `transform` never has to compete with the `:hover` lift on
+   the cards below.
+   ========================================================================= */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--motion-snappy) var(--ease-spring),
+                transform var(--motion-snappy) var(--ease-spring);
+    will-change: opacity, transform;
+}
+
+.reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+}
+
+/* Fewer and gentler, not none: the fade still bridges the appearance, the
+   movement goes away. */
+@media (prefers-reduced-motion: reduce) {
+    .reveal { transform: none; }
+    .reveal,
+    .reveal.is-revealed {
+        transition: opacity var(--motion-snappy) var(--ease-spring);
+    }
+}
 
 /* ============================================================================
    MOBILE

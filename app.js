@@ -223,17 +223,26 @@ document.addEventListener('DOMContentLoaded', () => {
         let settleTimer = null;
         let paused = false;
         let dots = [];
+        let drag = null;          // live pointer-drag state, null when idle
+        let suppressClick = false;
 
         const realSlides = () =>
             Array.from(track.children).filter((el) => el.dataset.clone !== '1');
 
-        function setTransform(animate) {
+        // offsetPx is the live finger/cursor offset during a drag; it is 0 for
+        // every programmatic move.
+        function setTransform(animate, offsetPx) {
+            const shift = offsetPx || 0;
             track.style.transition = animate
                 ? `transform ${SLIDE_MS}ms ${EASING}`
                 : 'none';
-            track.style.transform = `translateX(-${index * 100}%)`;
-            if (!animate) {
+            track.style.transform = shift
+                ? `translateX(calc(${-index * 100}% + ${shift}px))`
+                : `translateX(-${index * 100}%)`;
+            if (!animate && !shift) {
                 // Flush the jump so the next animated move actually transitions.
+                // Skipped while dragging — a forced reflow per pointermove is a
+                // cost with no benefit, since nothing transitions mid-drag.
                 void track.offsetHeight;
             }
         }
@@ -304,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function startAuto() {
             stopAuto();
             if (paused || REDUCED_MOTION) return;
+            if (drag) return; // mouseleave fires mid-drag under pointer capture
             if (realSlides().length < 2) return;
             autoTimer = setInterval(() => {
                 if (document.hidden) return;
@@ -410,26 +420,124 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Swipe on touch devices
-        let touchStartX = null;
+        // ---- Pointer drag (mouse, touch, pen) ----------------------------
+        // Replaces the old touch-only swipe. One code path for every pointer
+        // type, so desktop visitors can drag the carousel instead of hunting
+        // for the arrows, and the track now follows the cursor 1:1 rather than
+        // waiting for the gesture to end.
+        const DRAG_VELOCITY = 0.11;  // px/ms — a flick, however short
+        const DRAG_FRACTION = 0.18;  // of the container — a deliberate haul
+        const RUBBER_BAND = 0.35;    // resistance past the first slide
+        const DRAG_SLOP = 5;         // px before a press counts as a drag
+
+        function containerWidth() {
+            return container.clientWidth || track.clientWidth || 1;
+        }
+
+        track.addEventListener('pointerdown', (e) => {
+            if (!e.isPrimary || e.button > 0) return;
+            if (animating || realSlides().length < 2) return;
+
+            drag = {
+                id: e.pointerId,
+                startX: e.clientX,
+                startY: e.clientY,
+                lastX: e.clientX,
+                lastT: e.timeStamp,
+                vx: 0,
+                moved: false,
+                axis: null,
+            };
+            suppressClick = false;
+            stopAuto();
+
+            // Without this the browser's native image drag hijacks the gesture
+            // and leaves a ghost thumbnail stuck to the cursor.
+            if (e.pointerType === 'mouse') e.preventDefault();
+        });
+
+        track.addEventListener('pointermove', (e) => {
+            if (!drag || e.pointerId !== drag.id) return;
+
+            const dx = e.clientX - drag.startX;
+            const dy = e.clientY - drag.startY;
+
+            // Decide the axis once. A vertical gesture belongs to the page, so
+            // hand it back rather than scrubbing the track sideways.
+            if (!drag.axis) {
+                if (Math.abs(dx) < DRAG_SLOP && Math.abs(dy) < DRAG_SLOP) return;
+                if (Math.abs(dy) > Math.abs(dx)) {
+                    drag = null;
+                    startAuto();
+                    return;
+                }
+                drag.axis = 'x';
+                track.setPointerCapture(e.pointerId);
+                track.classList.add('is-dragging');
+            }
+
+            drag.moved = true;
+
+            const dt = e.timeStamp - drag.lastT;
+            if (dt > 0) drag.vx = (e.clientX - drag.lastX) / dt;
+            drag.lastX = e.clientX;
+            drag.lastT = e.timeStamp;
+
+            // Nothing sits to the left of the first slide, so resist instead of
+            // dragging empty track into view.
+            const offset = index === 0 && dx > 0 ? dx * RUBBER_BAND : dx;
+            setTransform(false, offset);
+        });
+
+        function endDrag(e) {
+            if (!drag || e.pointerId !== drag.id) return;
+
+            const d = drag;
+            drag = null;
+            track.classList.remove('is-dragging');
+            if (track.hasPointerCapture && track.hasPointerCapture(e.pointerId)) {
+                track.releasePointerCapture(e.pointerId);
+            }
+
+            if (!d.moved) {
+                startAuto();
+                return;
+            }
+
+            suppressClick = true;
+
+            const dx = e.clientX - d.startX;
+            const commit =
+                Math.abs(d.vx) > DRAG_VELOCITY ||
+                Math.abs(dx) > containerWidth() * DRAG_FRACTION;
+
+            if (commit && dx < 0) {
+                nudge(next);
+            } else if (commit && dx > 0 && index > 0) {
+                nudge(prev);
+            } else {
+                // Snap back. Deliberately not routed through goTo(): leaving
+                // `animating` false keeps the track re-grabbable immediately,
+                // and a CSS transition retargets from wherever it currently is.
+                track.style.transition = `transform ${SLIDE_MS}ms ${EASING}`;
+                track.style.transform = `translateX(-${index * 100}%)`;
+                startAuto();
+            }
+        }
+
+        track.addEventListener('pointerup', endDrag);
+        track.addEventListener('pointercancel', endDrag);
+
+        // A drag that happens to end over an image must not also read as a click.
         track.addEventListener(
-            'touchstart',
+            'click',
             (e) => {
-                touchStartX = e.changedTouches[0].clientX;
-                stopAuto();
+                if (!suppressClick) return;
+                suppressClick = false;
+                e.preventDefault();
+                e.stopPropagation();
             },
-            { passive: true }
-        );
-        track.addEventListener(
-            'touchend',
-            (e) => {
-                if (touchStartX === null) return;
-                const delta = e.changedTouches[0].clientX - touchStartX;
-                touchStartX = null;
-                if (Math.abs(delta) > 45) nudge(delta < 0 ? next : prev);
-                else startAuto();
-            },
-            { passive: true }
+            true
         );
 
         container.setAttribute('role', 'group');
@@ -439,8 +547,153 @@ document.addEventListener('DOMContentLoaded', () => {
         return { refresh };
     }
 
+    // ================= SCROLL REVEAL =================
+    const REVEAL_SELECTOR = [
+        '.section-title',
+        '.stat-card',
+        '.hub-card',
+        '.director-card',
+        '.job-card',
+        '.merch-container > *',
+        '.home-mission__body',
+    ].join(', ');
+
+    const REVEAL_MS = 300;      // matches --motion-snappy
+    const REVEAL_STAGGER = 60;  // ms between siblings in the same group
+
+    /**
+     * Fade + lift elements as they scroll into view, in sibling order.
+     *
+     * The pre-reveal styles are added by JS, never by the stylesheet, so the
+     * page renders fully visible if this script fails or never runs. Both
+     * classes are stripped once an element lands, which also keeps the reveal's
+     * `transform` from fighting the `:hover` lift these cards already have.
+     */
+    function initScrollReveal() {
+        const targets = Array.from(document.querySelectorAll(REVEAL_SELECTOR));
+        if (!targets.length || !('IntersectionObserver' in window)) return;
+
+        // Stagger is per-parent: a grid of cards cascades, but a card in one
+        // section doesn't wait on an unrelated section above it.
+        const groupIndex = new Map();
+        targets.forEach((el) => {
+            const parent = el.parentElement;
+            const n = groupIndex.get(parent) || 0;
+            groupIndex.set(parent, n + 1);
+            el.dataset.revealIndex = String(Math.min(n, 6)); // cap the wait
+            el.classList.add('reveal');
+        });
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    observer.unobserve(el);
+
+                    const delay = REDUCED_MOTION
+                        ? 0
+                        : Number(el.dataset.revealIndex) * REVEAL_STAGGER;
+
+                    setTimeout(() => {
+                        el.classList.add('is-revealed');
+                        // Drop the reveal styles once it has landed so the
+                        // element is back to its normal self.
+                        setTimeout(() => {
+                            el.classList.remove('reveal', 'is-revealed');
+                            delete el.dataset.revealIndex;
+                        }, REVEAL_MS + 60);
+                    }, delay);
+                });
+            },
+            { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        targets.forEach((el) => observer.observe(el));
+    }
+
+    // ================= STAT COUNT-UP =================
+    /**
+     * Count the impact numbers up from zero the first time they scroll into
+     * view. The numbers are the whole point of that band, so watching them
+     * climb is explanation rather than decoration — and it happens once.
+     */
+    function initStatCounters() {
+        const nums = Array.from(document.querySelectorAll('.stat-number'));
+        if (!nums.length || REDUCED_MOTION || !('IntersectionObserver' in window)) return;
+
+        const COUNT_MS = 900;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    observer.unobserve(entry.target);
+                    run(entry.target);
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        function prepare() {
+            nums.forEach((el) => {
+                // "3,000+" -> prefix "", value 3000, suffix "+"
+                const match = /^(\D*)([\d,]+)(.*)$/.exec(el.textContent.trim());
+                if (!match) return;
+
+                const value = Number(match[2].replace(/,/g, ''));
+                if (!Number.isFinite(value) || value <= 0) return;
+
+                const prefix = match[1];
+                const suffix = match[3];
+
+                el.dataset.countPrefix = prefix;
+                el.dataset.countValue = String(value);
+                el.dataset.countSuffix = suffix;
+
+                // Pin the box to the final string's width before zeroing the
+                // text. tabular-nums already fixes the digit widths; this stops
+                // the shorter "0" from re-centering the whole line each frame.
+                el.style.display = 'inline-block';
+                el.style.minWidth = `${Math.ceil(el.getBoundingClientRect().width)}px`;
+                el.textContent = `${prefix}0${suffix}`;
+
+                observer.observe(el);
+            });
+        }
+
+        // Measure against the real webfont, not the fallback — Work Sans loads
+        // async, and pinning a fallback-metrics width would size the box wrong.
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(prepare);
+        } else {
+            prepare();
+        }
+
+        function run(el) {
+            const prefix = el.dataset.countPrefix || '';
+            const suffix = el.dataset.countSuffix || '';
+            const value = Number(el.dataset.countValue);
+            const start = performance.now();
+
+            function step(now) {
+                const t = Math.min((now - start) / COUNT_MS, 1);
+                // ease-out cubic: fast off the line, settling into the number
+                const eased = 1 - Math.pow(1 - t, 3);
+                const shown = Math.round(value * eased);
+                el.textContent = prefix + shown.toLocaleString('en-US') + suffix;
+                if (t < 1) requestAnimationFrame(step);
+            }
+
+            requestAnimationFrame(step);
+        }
+    }
+
     // ================= INITIALIZE =================
     Object.entries(rosters).forEach(([gridId, roster]) => buildRoster(gridId, roster));
+
+    initScrollReveal();
+    initStatCounters();
 
     const sliderBuilds = Object.entries(sliderSets).map(([trackId, set]) =>
         buildSlides(trackId, set)

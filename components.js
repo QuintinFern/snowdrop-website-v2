@@ -10,7 +10,6 @@ export function loadComponents() {
     const isHope = path.includes("hope-events.html");
     const isAbout = path.includes("about-us.html");
     const isCareers = path.includes("careers.html");
-    const isContact = path.includes("#contact");
     const isMemberHub = path.includes("blog.html");
     const loginNav = isLoginNavVisible();
 
@@ -47,7 +46,13 @@ export function loadComponents() {
                 <a href="blog.html" class="${isMemberHub ? 'active' : ''}">Member Hub</a>
             </li>
 
-            <li><a href="#main-footer" class="${isContact ? 'active' : ''}">Contact</a></li>
+            <!--
+                Opens the visitor's mail client. This used to be href="#main-footer",
+                which only scrolled the page to the footer — people clicked "Contact"
+                and nothing recognisable happened. Keep this address in sync with the
+                footer's mailto button below.
+            -->
+            <li><a href="mailto:info@snowdropunited.org">Contact</a></li>
             
             <li id="nav-auth-item" style="${loginNav ? '' : 'display: none;'}">
                 ${loginNav ? `<a href="login.html" class="nav-auth-link">Login</a>` : ''}
