@@ -22,15 +22,15 @@
 :root {
     /* --- Accent / tint ---------------------------------------------------
        SwiftUI applies a single accent color to every interactive element. */
-    --primary-color: #2a80a6;
-    --primary-dark: #1f607d;
-    --primary-light: #3f9cc4;
+    --primary-color: #a1b3db;
+    --primary-dark: #73809d;
+    --primary-light: #c5d5f8;
     --tint: var(--primary-color);
     --tint-pressed: var(--primary-dark);
     /* Tinted fills, mirroring the fill ladder's weights */
-    --tint-fill: rgba(42, 128, 166, 0.12);
-    --tint-fill-strong: rgba(42, 128, 166, 0.18);
-    --tint-ring: rgba(42, 128, 166, 0.35);
+    --tint-fill: rgba(161, 179, 219, 0.12);
+    --tint-fill-strong: rgba(115, 128, 157, 0.18);
+    --tint-ring: rgba(197, 213, 248, 0.35);
 
     /* --- Label hierarchy (SystemColors.swift, light scheme) --------------
        primary  = opaque black                          (:366)
